@@ -1,5 +1,7 @@
 
-
+const size = window.innerHeight / 10
+const top2 = size * 0.6
+const left2 = size * 0.8
 const letters = ["a","b", "c", "d", "e","f","g","h"]
 
 class Cell {
@@ -34,9 +36,10 @@ class Cell {
         }
 
 
-        return `<div class=${this.css}>
+        return `<div class=${this.css} style="height:${size}px; width:${size}px">
             <div class='${numberCss}'>${visibleNumber}</div>
-            <div class='${letterCss}'>${visibleLetter}</div>
+
+            <div class='${letterCss}' style="top:${top2}px; left:${left2}px">${visibleLetter}</div>
         </div>`
 
     }
