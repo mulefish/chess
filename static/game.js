@@ -1,49 +1,84 @@
 
 const size = window.innerHeight / 10
-const top2 = size * 0.6
+const top2 = size * 0.3
 const left2 = size * 0.8
-const letters = ["a","b", "c", "d", "e","f","g","h"]
+const letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
 
 class Cell {
     constructor(row, col, css) {
         this.letter = letters[col]
-        this.rc =  `${row}${letters[col]}`
+        this.rc = `${row}${letters[col]}`
         this.row = row
         this.col = col
         this.css = css
     }
 
-    getHtml() { 
-        let visibleNumber = "&nbsp;"
-        let visibleLetter = "&nbsp;"
-        if ( this.col === 0 ) {
-            visibleNumber = (this.row + 1 )
-        }
+    // getHtml() {
+    //     let visibleNumber = "&nbsp;"
+    //     let visibleLetter = "&nbsp;"
+    //     if (this.col === 0) {
+    //         visibleNumber = (this.row + 1)
+    //     }
 
-        if ( this.row === 7 ) {
-            visibleLetter = this.letter
-        }
+    //     if (this.row === 7) {
+    //         visibleLetter = this.letter
+    //     }
 
-        let numberCss = ""
-        let letterCss = ""
+    //     let numberCss = ""
+    //     let letterCss = ""
 
-        if ( this.css === "feltgreen") {
-            numberCss = "whiteNumber"
-            letterCss = "whiteLetter"
-        } else {
-            numberCss = "greenNumber"
-            letterCss = "greenLetter"
-        }
+    //     if (this.css === "feltgreen") {
+    //         numberCss = "whiteNumber"
+    //         letterCss = "whiteLetter"
+    //     } else {
+    //         numberCss = "greenNumber"
+    //         letterCss = "greenLetter"
+    //     }
 
+    //     return `<td onclick="setActive();"   class=${this.css} style="height:${size}px; width:${size}px"  >
+    //         <div class='${numberCss}'>${visibleNumber}</div>
+    //         <div class='${letterCss}' style="top:${top2}px; left:${left2}px">${visibleLetter}</div>
+    //     </td>`
 
-        return `<div class=${this.css} style="height:${size}px; width:${size}px">
-            <div class='${numberCss}'>${visibleNumber}</div>
-
-            <div class='${letterCss}' style="top:${top2}px; left:${left2}px">${visibleLetter}</div>
-        </div>`
-
-    }
+    // }
 }
+
+function cellFactory(obj) {
+
+
+    let visibleNumber = "&nbsp;"
+    let visibleLetter = "&nbsp;"
+    if (obj.col === 0) {
+        visibleNumber = (obj.row + 1)
+    }
+
+    if (obj.row === 7) {
+        visibleLetter = obj.letter
+    }
+
+    let numberCss = ""
+    let letterCss = ""
+
+    if (obj.css === "feltgreen") {
+        numberCss = "whiteNumber"
+        letterCss = "whiteLetter"
+    } else {
+        numberCss = "greenNumber"
+        letterCss = "greenLetter"
+    }
+        // <div onClick="setActive('${obj.rc}');"  >
+        // </div>
+
+    return `<td class=${obj.css} style="height:${size}px; width:${size}px"  onClick="setActive('${obj.rc}');">
+            <div class='${numberCss}'>${visibleNumber}</div>
+            <div class='${letterCss}' style="top:${top2}px; left:${left2}px">${visibleLetter}</div>
+
+    </td>`
+
+
+
+}
+
 
 let cells = {}
 cells['0a'] = new Cell(0, 0, 'feltgreen')
@@ -117,19 +152,25 @@ cells['7h'] = new Cell(7, 7, 'feltgreen')
 function createUI() {
 
 
-    let table = "<table border='1'>"
-    
-    for ( let k in cells ) {
+    let table = "<table border='0'>"
+
+    for (let k in cells) {
         const obj = cells[k]
-        if ( obj.col === 0 ) {
+        if (obj.col === 0) {
             table += "<tr>"
         }
-        table += "<td>" + obj.getHtml() + "</td>"
+        table += cellFactory(obj)
 
-        if ( obj.col === 7 ) {
+        if (obj.col === 7) {
             table += "</tr>"
         }
     }
     table += "</table>"
-    document.getElementById("board").innerHTML = table 
+    document.getElementById("board").innerHTML = table
 }
+
+function setActive(x) {
+    console.log("whale " + x  )
+    document.getElementById("active").innerHTML = x
+}
+

@@ -1,49 +1,82 @@
 <html>
-    <head>
-        <style>
-            .offwhite {
-                background-color: green;
-            }
-            .feltgreen {
-                background-color: #F8F0E3;
-            }
 
-            .greenNumber {
-                color: #F8F0E3;
-                margin-left: 3px;
-                font-size: 11px;
-            }
-            .whiteNumber {
-                color: green;
-                margin-left: 3px;
-                font-size: 11px;
-            }
-            .whiteLetter {
-                position: relative;
-                z-index: 2;
-                font-size: 11px;
-                color: green;
-            }
+<head>
+    <link rel="icon" href="data:,">
 
-            .greenLetter {
-                position: relative;
-                z-index: 2;
-                font-size: 11px;
-                color: #F8F0E3;
-            }
-        </style>
-        <script src="/static/game.js"></script>
-        
-    </head>
-    <body>
+    <style>
+        .offwhite {
+            background-color: green;
+            border: 1px solid black;
+        }
 
-        <div id="board">
-        </div>
-        <hr>
+        .feltgreen {
+            background-color: #F8F0E3;
+            border: 1px solid black;
 
-        <script>
-            createUI()
-        </script>
+        }
 
-    </body>
-</html> 
+        .greenNumber {
+            color: #F8F0E3;
+            margin-left: 3px;
+            font-size: 11px;
+        }
+
+        .whiteNumber {
+            color: green;
+            margin-left: 3px;
+            font-size: 11px;
+        }
+
+        .whiteLetter {
+            position: relative;
+            z-index: 2;
+            font-size: 11px;
+            color: green;
+        }
+
+        .greenLetter {
+            position: relative;
+            z-index: 2;
+            font-size: 11px;
+            color: #F8F0E3;
+        }
+
+        #board {
+            -webkit-touch-callout: none;
+            /* iOS Safari */
+            -webkit-user-select: none;
+            /* Safari */
+            -khtml-user-select: none;
+            /* Konqueror HTML */
+            -moz-user-select: none;
+            /* Old versions of Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+        }
+
+        td:hover {
+    background-color: #ff6633;
+}
+    </style>
+    <script src="/static/game.js"></script>
+
+</head>
+
+<body>
+    
+    <div id="board">
+    </div>
+    <hr />
+    <div id="active">?</div>
+
+
+    <script>
+        createUI()
+    </script>
+
+</body>
+
+</html>
