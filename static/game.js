@@ -5,12 +5,20 @@ const left2 = size * 0.8
 const letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
 
 class Cell {
-    constructor(row, col, css) {
+    constructor(row, col, css, pieceId=undefined) {
         this.letter = letters[col]
         this.rc = `${row}${letters[col]}`
         this.row = row
         this.col = col
         this.css = css
+        // if ( pieceId !== undefined) {
+            this.piece = "<div class='piece'>&#x2654;</div>"
+        // } else { 
+        //     this.piece = ""
+        // }
+    }
+    getPiece() {
+        return this.piece
     }
 }
 
@@ -36,12 +44,13 @@ function cellFactory(obj) {
         letterCss = "greenLetter"
     }
 
-    return `<td class=${obj.css} style="height:${size}px; width:${size}px"  onClick="setActive('${obj.rc}');">
-            <div class='${numberCss}' style="top:-15px;" >${visibleNumber}</div>
-            <div class='${letterCss}' style="top:${top2}px; left:${left2}px">${visibleLetter}</div>
+    return `<td align="center" class=${obj.css} style="height:${size}px; width:${size}px"  onClick="setActive('${obj.rc}');">
+    ${obj.getPiece()}
 
     </td>`
-}
+            // <div class='${numberCss}' style="top:-15px;" >${visibleNumber}</div>
+            // <div class='${letterCss}' style="top:${top2}px; left:${left2}px">${visibleLetter}</div>
+        }
 
 
 let cells = {}
@@ -50,7 +59,7 @@ cells['0b'] = new Cell(0, 1, 'offwhite')
 cells['0c'] = new Cell(0, 2, 'feltgreen')
 cells['0d'] = new Cell(0, 3, 'offwhite')
 cells['0e'] = new Cell(0, 4, 'feltgreen')
-cells['0f'] = new Cell(0, 5, 'offwhite')
+cells['0f'] = new Cell(0, 5, 'offwhite', "kittycat")
 cells['0g'] = new Cell(0, 6, 'feltgreen')
 cells['0h'] = new Cell(0, 7, 'offwhite')
 cells['1a'] = new Cell(1, 0, 'offwhite')
@@ -131,10 +140,13 @@ function createUI() {
     }
     table += "</table>"
     document.getElementById("board").innerHTML = table
+
+        
+
+
 }
 
 function setActive(x) {
-    console.log("whale " + x  )
     document.getElementById("active").innerHTML = x
 }
 

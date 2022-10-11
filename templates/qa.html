@@ -1,0 +1,167 @@
+<html>
+
+<head>
+    <link rel="icon" href="data:,">
+
+    <style>
+        .feltgreen {
+            background-color: green;
+            height:60px;
+            width: 60px;
+        }
+        .piece {
+            font-size: 40px;
+        }
+
+        .offwhite {
+            background-color: #F8F0E3;
+            height:60px;
+            width: 60px;
+
+        }
+
+        .greenNumber {
+            position: relative;
+            z-index: 1;
+            color: #F8F0E3;
+            margin-left: 3px;
+            font-size: 11px;
+        }
+
+        .whiteNumber {
+            position: relative;
+            z-index: 1;
+            color: green;
+            margin-left: 3px;
+            font-size: 11px;
+        }
+
+        .whiteLetter {
+            position: relative;
+            z-index: 2;
+            font-size: 11px;
+            color: green;
+        }
+
+        .greenLetter {
+            position: relative;
+            z-index: 2;
+            font-size: 11px;
+            color: #F8F0E3;
+        }
+
+        #board {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        td:hover {
+            background-color: yellow;
+        }
+    </style>
+    <script src="/static/game.js"></script>
+
+</head>
+
+<body>
+    
+
+    <table border="1">
+        <tr>
+            <td id="1_a" class="offwhite" align="center" valign="center"><span class="piece">♜</span></td>
+            <td id="2_a" class="feltgreen" align="center" valign="center"><span class="piece">♞</span></td>
+            <td id="3_a" class="offwhite" align="center" valign="center"><span class="piece">♝</span></td>
+            <td id="4_a" class="feltgreen" align="center" valign="center"><span class="piece">♛</span></td>
+            <td id="5_a" class="offwhite" align="center" valign="center"><span class="piece">♚</span></td>
+            <td id="6_a" class="feltgreen" align="center" valign="center"><span class="piece">♝</span></td>
+            <td id="7_a" class="offwhite" align="center" valign="center"><span class="piece">♞</span></td>
+            <td id="8_a" class="feltgreen" align="center" valign="center"><span class="piece">♜</span></td>
+        </tr>
+        <tr>
+            <td id="1_b" class="feltgreen" align="center" valign="center"><span class="piece">♟</span></td>
+            <td id="2_b" class="offwhite" align="center" valign="center"><span class="piece">♟</span></td>
+            <td id="3_b" class="feltgreen" align="center" valign="center"><span class="piece">♟</span></td>
+            <td id="4_b" class="offwhite" align="center" valign="center"><span class="piece">♟</span></td>
+            <td id="5_b" class="feltgreen" align="center" valign="center"><span class="piece">♟</span></td>
+            <td id="6_b" class="offwhite" align="center" valign="center"><span class="piece">♟</span></td>
+            <td id="7_b" class="feltgreen" align="center" valign="center"><span class="piece">♟</span></td>
+            <td id="8_b" class="offwhite" align="center" valign="center"><span class="piece">♟</span></td>
+        </tr>
+        <tr>
+            <td id="1_c" class="offwhite" align="center" valign="center"><span class="piece"></span></td>
+            <td id="2_c" class="feltgreen" align="center" valign="center"><span class="piece"></span></td>
+            <td id="3_c" class="offwhite" align="center" valign="center"><span class="piece"></span></td>
+            <td id="4_c" class="feltgreen" align="center" valign="center"><span class="piece"></span></td>
+            <td id="5_c" class="offwhite" align="center" valign="center"><span class="piece"></span></td>
+            <td id="6_c" class="feltgreen" align="center" valign="center"><span class="piece"></span></td>
+            <td id="7_c" class="offwhite" align="center" valign="center"><span class="piece"></span></td>
+            <td id="8_c" class="feltgreen" align="center" valign="center"><span class="piece"></span></td>
+        </tr>
+        <tr>
+            <td id="1_d" class="feltgreen" align="center" valign="center"><span class="piece"></span></td>
+            <td id="2_d" class="offwhite" align="center" valign="center"><span class="piece"></span></td>
+            <td id="3_d" class="feltgreen" align="center" valign="center"><span class="piece"></span></td>
+            <td id="4_d" class="offwhite" align="center" valign="center"><span class="piece"></span></td>
+            <td id="5_d" class="feltgreen" align="center" valign="center"><span class="piece"></span></td>
+            <td id="6_d" class="offwhite" align="center" valign="center"><span class="piece"></span></td>
+            <td id="7_d" class="feltgreen" align="center" valign="center"><span class="piece"></span></td>
+            <td id="8_d" class="offwhite" align="center" valign="center"><span class="piece"></span></td>
+        </tr>
+        <tr>
+            <td id="1_e" class="offwhite" align="center" valign="center"><span class="piece"></span></td>
+            <td id="2_e" class="feltgreen" align="center" valign="center"><span class="piece"></span></td>
+            <td id="3_e" class="offwhite" align="center" valign="center"><span class="piece"></span></td>
+            <td id="4_e" class="feltgreen" align="center" valign="center"><span class="piece"></span></td>
+            <td id="5_e" class="offwhite" align="center" valign="center"><span class="piece"></span></td>
+            <td id="6_e" class="feltgreen" align="center" valign="center"><span class="piece"></span></td>
+            <td id="7_e" class="offwhite" align="center" valign="center"><span class="piece"></span></td>
+            <td id="8_e" class="feltgreen" align="center" valign="center"><span class="piece"></span></td>
+
+        </tr>
+        <tr>
+            <td id="1_f" class="feltgreen" align="center" valign="center"><span class="piece"></span></td>
+            <td id="2_f" class="offwhite" align="center" valign="center"><span class="piece"></span></td>
+            <td id="3_f" class="feltgreen" align="center" valign="center"><span class="piece"></span></td>
+            <td id="4_f" class="offwhite" align="center" valign="center"><span class="piece"></span></td>
+            <td id="5_f" class="feltgreen" align="center" valign="center"><span class="piece"></span></td>
+            <td id="6_f" class="offwhite" align="center" valign="center"><span class="piece"></span></td>
+            <td id="7_f" class="feltgreen" align="center" valign="center"><span class="piece"></span></td>
+            <td id="8_f" class="offwhite" align="center" valign="center"><span class="piece"></span></td>
+        </tr>
+
+
+        <tr>
+            <td id="1_g" class="offwhite" align="center" valign="center"><span class="piece">♙</span></td>
+            <td id="2_g" class="feltgreen" align="center" valign="center"><span class="piece">♙</span></td>
+            <td id="3_g" class="offwhite" align="center" valign="center"><span class="piece">♙</span></td>
+            <td id="4_g" class="feltgreen" align="center" valign="center"><span class="piece">♙</span></td>
+            <td id="5_g" class="offwhite" align="center" valign="center"><span class="piece">♙</span></td>
+            <td id="6_g" class="feltgreen" align="center" valign="center"><span class="piece">♙</span></td>
+            <td id="7_g" class="offwhite" align="center" valign="center"><span class="piece">♙</span></td>
+            <td id="8_g" class="feltgreen" align="center" valign="center"><span class="piece">♙</span></td>
+        </tr>
+        <tr>
+            <td id="1_h" class="feltgreen" align="center" valign="center"><span class="piece">♖</span></td>
+            <td id="2_h" class="offwhite" align="center" valign="center"><span class="piece">♘</span></td>
+            <td id="3_h" class="feltgreen" align="center" valign="center"><span class="piece">♗</span></td>
+            <td id="4_h" class="offwhite" align="center" valign="center"><span class="piece">♕</span></td>
+            <td id="5_h" class="feltgreen" align="center" valign="center"><span class="piece">♔</span></td>
+            <td id="6_h" class="offwhite" align="center" valign="center"><span class="piece">♗</span></td>
+            <td id="7_h" class="feltgreen" align="center" valign="center"><span class="piece">♘</span></td>
+            <td id="8_h" class="offwhite" align="center" valign="center"><span class="piece">♖</span></td>
+        </tr>
+
+    </table>
+
+
+    <hr />
+
+
+
+
+</body>
+
+</html>

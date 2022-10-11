@@ -22,6 +22,10 @@ def qa():
     cyan("qa")
     return render_template('qa.html')
 
+@app.route('/simple')
+def simple():
+    cyan("simple")
+    return render_template('simple.html')
 
 if __name__ == '__main__':
     #cyan("http://34.83.236.108:8080 with database at data/dispense.db")
