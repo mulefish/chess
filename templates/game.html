@@ -16,12 +16,16 @@
         }
 
         .greenNumber {
+            position: relative;
+            z-index: 1;
             color: #F8F0E3;
             margin-left: 3px;
             font-size: 11px;
         }
 
         .whiteNumber {
+            position: relative;
+            z-index: 1;
             color: green;
             margin-left: 3px;
             font-size: 11px;
@@ -43,18 +47,11 @@
 
         #board {
             -webkit-touch-callout: none;
-            /* iOS Safari */
             -webkit-user-select: none;
-            /* Safari */
             -khtml-user-select: none;
-            /* Konqueror HTML */
             -moz-user-select: none;
-            /* Old versions of Firefox */
             -ms-user-select: none;
-            /* Internet Explorer/Edge */
             user-select: none;
-            /* Non-prefixed version, currently
-                                  supported by Chrome, Edge, Opera and Firefox */
         }
 
         td:hover {

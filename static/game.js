@@ -12,40 +12,9 @@ class Cell {
         this.col = col
         this.css = css
     }
-
-    // getHtml() {
-    //     let visibleNumber = "&nbsp;"
-    //     let visibleLetter = "&nbsp;"
-    //     if (this.col === 0) {
-    //         visibleNumber = (this.row + 1)
-    //     }
-
-    //     if (this.row === 7) {
-    //         visibleLetter = this.letter
-    //     }
-
-    //     let numberCss = ""
-    //     let letterCss = ""
-
-    //     if (this.css === "feltgreen") {
-    //         numberCss = "whiteNumber"
-    //         letterCss = "whiteLetter"
-    //     } else {
-    //         numberCss = "greenNumber"
-    //         letterCss = "greenLetter"
-    //     }
-
-    //     return `<td onclick="setActive();"   class=${this.css} style="height:${size}px; width:${size}px"  >
-    //         <div class='${numberCss}'>${visibleNumber}</div>
-    //         <div class='${letterCss}' style="top:${top2}px; left:${left2}px">${visibleLetter}</div>
-    //     </td>`
-
-    // }
 }
 
 function cellFactory(obj) {
-
-
     let visibleNumber = "&nbsp;"
     let visibleLetter = "&nbsp;"
     if (obj.col === 0) {
@@ -66,17 +35,12 @@ function cellFactory(obj) {
         numberCss = "greenNumber"
         letterCss = "greenLetter"
     }
-        // <div onClick="setActive('${obj.rc}');"  >
-        // </div>
 
     return `<td class=${obj.css} style="height:${size}px; width:${size}px"  onClick="setActive('${obj.rc}');">
-            <div class='${numberCss}'>${visibleNumber}</div>
+            <div class='${numberCss}' style="top:-15px;" >${visibleNumber}</div>
             <div class='${letterCss}' style="top:${top2}px; left:${left2}px">${visibleLetter}</div>
 
     </td>`
-
-
-
 }
 
 
