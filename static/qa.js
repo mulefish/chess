@@ -72,5 +72,12 @@ function setup() {
     }
 }
 function setActive(cell) {
-    document.getElementById('activeCell').innerHTML = cell.id
+    debugger
+    // console.log( cell.id )
+    // try { 
+
+    // document.getElementById('activeCell').innerHTML = "HELLO: " + cell.id
+    // } catch( boom ) {
+    //     console.log( boom )
+    // }
 }
