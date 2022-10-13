@@ -1,0 +1,64 @@
+.feltgreen {
+    background-color: green;
+    height: 80px;
+    width: 80px;
+}
+
+
+.offwhite {
+    background-color: #909090;
+    height: 80px;
+    width: 80px;
+
+}
+
+.greenNumber {
+    position: relative;
+    z-index: 1;
+    color: #F8F0E3;
+    margin-left: 3px;
+    font-size: 11px;
+}
+
+.whiteNumber {
+    position: relative;
+    z-index: 1;
+    color: green;
+    margin-left: 3px;
+    font-size: 11px;
+}
+
+.whiteLetter {
+    position: relative;
+    z-index: 2;
+    font-size: 11px;
+    color: green;
+}
+
+.greenLetter {
+    position: relative;
+    z-index: 2;
+    font-size: 11px;
+    color: #F8F0E3;
+}
+
+#board {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.offwhite:hover {
+    background-color: yellow;
+}
+
+.feltgreen:hover {
+    background-color: yellow;
+}
+
+.possible {
+    background-color: orange;
+}
