@@ -7,25 +7,6 @@ import sqlite3
 from io import BytesIO,StringIO
 #### Globals 
 app = Flask(__name__)
-stores = [] 
-
-@app.route('/')
-@app.route('/index')
-def index():
-    cyan("index")
-    return render_template('game.html')
-
-
-
-@app.route('/qa')
-def qa():
-    cyan("qa")
-    return render_template('qa.html')
-
-@app.route('/simple')
-def simple():
-    cyan("simple")
-    return render_template('simple.html')
 
 def create_html_grid():
     html = '<div class="grid-container">'
@@ -37,7 +18,7 @@ def create_html_grid():
     html += '</div>'
     return html
 
-@app.route('/chess')
+@app.route('/')
 def chess():
     html_grid = create_html_grid()
     return render_template('chess.html', html_grid=html_grid)
