@@ -59,12 +59,12 @@ function getPossibleMoveArrays(icon) {
 
 function getPieces() {
     let p = {}
-    // p['rb1'] = new Piece('rb1', BLACK, ROOK_B, 0, 0, 8);
+    p['rb1'] = new Piece('rb1', BLACK, ROOK_B, 0, 0, 8);
     p['nb1'] = new Piece('nb1', BLACK, KNIGHT_B, 0, 1, 1);
-    // p['bb1'] = new Piece('bb1', BLACK, BISHOP_B, 0, 2, 8);
-    // p['qb'] = new Piece('qb', BLACK, QUEEN_B, 0, 3, 8);
-    // p['kb'] = new Piece('kb', BLACK, KING_B, 0, 4, 1);
-    // p['bb2'] = new Piece('bb2', BLACK, BISHOP_B, 0, 5, 8);
+    p['bb1'] = new Piece('bb1', BLACK, BISHOP_B, 0, 2, 8);
+    p['qb'] = new Piece('qb', BLACK, QUEEN_B, 0, 3, 8);
+    p['kb'] = new Piece('kb', BLACK, KING_B, 0, 4, 1);
+    p['bb2'] = new Piece('bb2', BLACK, BISHOP_B, 0, 5, 8);
     p['nb2'] = new Piece('nb2', BLACK, KNIGHT_B, 0, 6, 1);
     p['rb2'] = new Piece('rb2', BLACK, PAWN_B, 0, 7, 8);
     p['pb1'] = new Piece('pb1', BLACK, PAWN_B, 1, 0, 2);
