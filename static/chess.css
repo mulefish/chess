@@ -1,0 +1,31 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(8, 80px);
+    grid-template-rows: repeat(8, 80px);
+}
+
+.grid-cell {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+    border: 1px solid black;
+}
+
+.cream {
+    background-color: #f5f5dc;
+}
+
+.green {
+    background-color: #33aa33;
+}
+
+.chess-piece {
+        font-family: "DejaVu Sans", "Segoe UI Symbol", sans-serif;
+        /* font-weight: bold; */
+        font-size: 4rem;
+        pointer-events: none; 
+        
+}

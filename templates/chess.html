@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess!</title>
+    <!-- <script src="{{ url_for('static', filename='chess_helper.js') }}"></script> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='chess.css') }}">
+</head>
+<body>
+    <div id="chess-board">{{ html_grid|safe }}</div>
+    <script src="{{ url_for('static', filename='chess.js') }}"></script>
+</body>
+</html>
