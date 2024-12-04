@@ -24,12 +24,29 @@
 
 .highlighted { background-color: yellow } 
 
-
 .chess-piece {
         font-family: "DejaVu Sans", "Segoe UI Symbol", sans-serif;
         /* font-weight: bold; */
         font-size: 4rem;
-        pointer-events: none;    
+        /*pointer-events: none;   */ 
+        z-index: 10;
 }
 
 .unselectable { user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; -o-user-select: none; }
+
+
+.row-number {
+    font-size: 0.6em;
+    color: gray;
+    position: relative;
+    top: 10px;
+    left: -5px;
+}
+
+.col-letter {
+    font-size: 0.6em;
+    color: gray;
+    position: relative;
+    top: -5px;
+    left: 10px;
+}

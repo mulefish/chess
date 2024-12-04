@@ -1,6 +1,48 @@
 let activePiece = null;
 let possibleMoves = [];
 
+// class Piece {
+//     constructor(key, color, icon, row, col, recurseDepth) {
+//         this.key = key;
+//         this.color = color;
+//         this.icon = icon;
+//         this.row = row;
+//         this.col = col;
+//         this.recurseDepth = recurseDepth;
+//         this.moves = getPossibleMoveArrays(icon);
+//     }
+
+//     // placeOnBoard() {
+//     //     const cellId = `${this.row}-${this.col}`;
+//     //     const cell = document.getElementById(cellId);
+//     //     if (cell) {
+//     //         cell.classList.add('unselectable'); // Make the icon unselectable
+//     //         cell.innerHTML = "<span class='chess-piece'>" + this.icon + "</span>";
+//     //         cell.piece = this;
+//     //     } else {
+//     //         console.log(`Cell with id ${cellId} not found`);
+//     //     }
+//     // }
+
+//     placeOnBoard() {
+//         const cellId = `${this.row}-${this.col}`;
+//         const cell = document.getElementById(cellId);
+//         if (cell) {
+//             cell.classList.add('unselectable'); // Make the icon unselectable
+//             const pieceElement = document.createElement('span');
+//             pieceElement.className = 'chess-piece';
+//             pieceElement.innerHTML = this.icon;
+//             cell.appendChild(pieceElement);
+//             cell.piece = this;
+//         } else {
+//             console.log(`Cell with id ${cellId} not found`);
+//         }
+//     }
+
+    
+// }
+
+
 class Piece {
     constructor(key, color, icon, row, col, recurseDepth) {
         this.key = key;
@@ -17,13 +59,76 @@ class Piece {
         const cell = document.getElementById(cellId);
         if (cell) {
             cell.classList.add('unselectable'); // Make the icon unselectable
-            cell.innerHTML = "<span class='chess-piece'>" + this.icon + "</span>";
+            const pieceElement = document.createElement('span');
+            pieceElement.className = 'chess-piece';
+            pieceElement.innerHTML = this.icon;
+            cell.appendChild(pieceElement);
             cell.piece = this;
         } else {
             console.log(`Cell with id ${cellId} not found`);
         }
     }
 }
+
+function movePieceToCell(piece, cell) {
+    // If the cell has a piece, capture it and log details
+    if (cell.piece) {
+        console.log(`Captured piece: ${cell.piece.icon} (color: ${cell.piece.color}) at [${cell.id}]`);
+        const capturedPieceElement = cell.querySelector('.chess-piece');
+        if (capturedPieceElement) {
+            cell.removeChild(capturedPieceElement);
+        }
+        cell.piece = null; // Remove the captured piece
+    }
+
+    // Move the active piece
+    const [newRow, newCol] = cell.id.split('-').map(Number);
+    const oldCellId = `${piece.row}-${piece.col}`;
+    const oldCell = document.getElementById(oldCellId);
+    if (oldCell) {
+        const pieceElement = oldCell.querySelector('.chess-piece');
+        if (pieceElement) {
+            oldCell.removeChild(pieceElement);
+        }
+        oldCell.piece = null;
+    }
+
+    piece.row = newRow;
+    piece.col = newCol;
+    piece.placeOnBoard();
+}
+
+function addClickListeners() {
+    const cells = document.querySelectorAll('.grid-cell');
+    cells.forEach(cell => {
+        cell.addEventListener('click', () => {
+            if (activePiece) {
+                const cellId = cell.id;
+                const moveExists = possibleMoves.some(move => move.join('-') === cellId);
+
+                if (moveExists) {
+                    console.log(`YAY  LAND HERE Clicked on cell: ${cell.id}`);
+                    movePieceToCell(activePiece, cell);
+                    activePiece = null;
+
+                    // Clear highlights after moving the piece
+                    zeroOutActive();
+                } else {
+                    zeroOutActive();
+                }
+            } else if (cell.piece) {
+                possibleMoves = getPossibleMoves(cell.piece);
+                activePiece = cell.piece; // Set the active piece
+                setActivePiece(cell.piece);
+                highlightCells(possibleMoves);
+                console.log(`YAY Clicked on cell: ${cell.id}, Piece: ${cell.piece.icon} key: ${cell.piece.key} and ` + JSON.stringify(possibleMoves));
+            } else {
+                console.log(`BOO Clicked on cell: ${cell.id}`);
+            }
+        });
+    });
+}
+
 
 function setActivePiece(piece) {
     if (piece == null) {
@@ -94,7 +199,7 @@ function zeroOutActive() {
     possibleMoves = [];
     highlightCells(possibleMoves);
 }
-
+/* 
 // // Function to add click event listeners to each cell
 function addClickListeners() {
     const cells = document.querySelectorAll('.grid-cell');
@@ -144,7 +249,7 @@ function addClickListeners() {
         });
     });
 }
-
+*/ 
 
 document.addEventListener('DOMContentLoaded', () => {
     pieces = getPieces();
@@ -156,3 +261,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Adding click event listeners
     addClickListeners();
 });
+
+
