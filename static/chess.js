@@ -13,6 +13,7 @@ class Piece {
         const cellId = `${this.row}-${this.col}`;
         const cell = document.getElementById(cellId);
         if (cell) {
+            cell.classList.add('unselectable'); // Make the icon unselectable
             cell.innerHTML = "<span class='chess-piece'>" + this.icon + "</span>";
             cell.piece = this;
         } else {
@@ -20,8 +21,14 @@ class Piece {
     }
 }
 
-function setActivePiece(piece) { 
-    document.getElementById("activePiece").innerHTML = piece.key + " " + piece.icon 
+function setActivePiece(piece) {
+    if (piece == null) {
+        document.getElementById("activePiece").innerHTML = ""
+
+    } else {
+        document.getElementById("activePiece").innerHTML = piece.key + " " + piece.icon
+
+    }
 }
 
 
@@ -101,26 +108,33 @@ function getPossibleMoves(piece) {
     return possibleMoves;
 }
 
+function zeroOutActive() {
+    setActivePiece(null)
+    possibleMoves = []
+    highlightCells(possibleMoves)
+}
+
 // Function to add click event listeners to each cell
 function addClickListeners() {
     const cells = document.querySelectorAll('.grid-cell');
     cells.forEach(cell => {
         cell.addEventListener('click', () => {
             if (cell.piece) {
+ 
+                setActivePiece(cell.piece)
                 possibleMoves = getPossibleMoves(cell.piece);
                 activePiece = cell.piece; // Set the active piece
                 highlightCells(possibleMoves);
             } else {
+ 
                 const cellId = cell.id;
                 const moveExists = possibleMoves.some(move => move.join('-') === cellId);
-
+                
                 if (moveExists) {
-                    
-                    // If the cell has a piece, capture it and log details
                     if (cell.piece) {
-                        console.log(`KILL! Captured piece: ${cell.piece.icon} (color: ${cell.piece.color}) at [${cell.id}]`);
                         cell.piece = null; // Remove the captured piece
-                        
+                    } else {
+                        zeroOutActive()
                     }
 
                     // Move the active piece
@@ -135,11 +149,12 @@ function addClickListeners() {
                     activePiece.row = newRow;
                     activePiece.col = newCol;
                     activePiece.placeOnBoard();
-
-                    activePiece = null; // Clear the active piece after move
+                    activePiece = null;
                 } else {
+                    zeroOutActive()
                 }
             }
         });
     });
 }
+

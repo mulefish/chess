@@ -29,6 +29,7 @@
         font-family: "DejaVu Sans", "Segoe UI Symbol", sans-serif;
         /* font-weight: bold; */
         font-size: 4rem;
-        pointer-events: none; 
-        
+        pointer-events: none;    
 }
+
+.unselectable { user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; -o-user-select: none; }
