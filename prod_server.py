@@ -33,7 +33,7 @@ def create_html_grid():
         for col in range(8):
             cell_id = f"{row}-{col}"
             cell_class = 'cream' if (row + col) % 2 == 0 else 'green'
-            html += f'<div id="{cell_id}" class="grid-cell {cell_class}">{cell_id}</div>'
+            html += f'<div id="{cell_id}" class="grid-cell {cell_class}"></div>'
     html += '</div>'
     return html
 

@@ -95,7 +95,7 @@ function zeroOutActive() {
     highlightCells(possibleMoves);
 }
 
-// Function to add click event listeners to each cell
+// // Function to add click event listeners to each cell
 function addClickListeners() {
     const cells = document.querySelectorAll('.grid-cell');
     cells.forEach(cell => {
@@ -144,6 +144,7 @@ function addClickListeners() {
         });
     });
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
     pieces = getPieces();
