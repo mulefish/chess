@@ -16,7 +16,6 @@ class Piece {
             cell.innerHTML = "<span class='chess-piece'>" + this.icon + "</span>";
             cell.piece = this;
         } else {
-            console.log(`Cell with id ${cellId} not found`);
         }
     }
 }
@@ -30,72 +29,7 @@ function isValidMove(row, col) {
     return row >= 0 && row < 8 && col >= 0 && col < 8;
 }
 
-console.log("assldfkkalsd")
-
 let possibleMoves = []
-/*
-function addClickListeners() {
-    const cells = document.querySelectorAll('.grid-cell');
-    cells.forEach(cell => {
-        cell.addEventListener('click', () => {
-            if (cell.piece) {
-                possibleMoves = getPossibleMoves(cell.piece);
-
-                console.log(`YAY Clicked on cell: ${cell.id}, Piece: ${cell.piece.icon} key: ${cell.piece.key} and ` + JSON.stringify(possibleMoves));
-                highlightCells(possibleMoves);
-            } else {
-                const cellId = cell.id;
-                const moveExists = possibleMoves.some(move => move.join('-') === cellId);
-
-                if (moveExists) {
-                    console.log(`YAY  LAND HERE Clicked on cell: ${cell.id}`);
-                } else {
-                    console.log(`BOO Clicked on cell: ${cell.id} and \n${JSON.stringify(possibleMoves)}`);
-                }
-            }
-        });
-    });
-}
-*/
-
-// Function to add click event listeners to each cell
-function addClickListeners() {
-    const cells = document.querySelectorAll('.grid-cell');
-    cells.forEach(cell => {
-        cell.addEventListener('click', () => {
-            if (cell.piece) {
-                possibleMoves = getPossibleMoves(cell.piece);
-                activePiece = cell.piece; // Set the active piece
-                console.log(`YAY Clicked on cell: ${cell.id}, Piece: ${cell.piece.icon} key: ${cell.piece.key} and ` + JSON.stringify(possibleMoves));
-                highlightCells(possibleMoves);
-            } else {
-                const cellId = cell.id;
-                const moveExists = possibleMoves.some(move => move.join('-') === cellId);
-
-                if (moveExists) {
-                    console.log(`YAY  LAND HERE Clicked on cell: ${cell.id}`);
-
-                    // Move the active piece
-                    const [newRow, newCol] = cellId.split('-').map(Number);
-                    const oldCellId = `${activePiece.row}-${activePiece.col}`;
-                    const oldCell = document.getElementById(oldCellId);
-                    if (oldCell) {
-                        oldCell.innerHTML = '';
-                        oldCell.piece = null;
-                    }
-
-                    activePiece.row = newRow;
-                    activePiece.col = newCol;
-                    activePiece.placeOnBoard();
-
-                    activePiece = null; // Clear the active piece after move
-                } else {
-                    console.log(`BOO Clicked on cell: ${cell.id} and \n${JSON.stringify(possibleMoves)}`);
-                }
-            }
-        });
-    });
-}
 
 let pieces = {}
 document.addEventListener('DOMContentLoaded', () => {
@@ -143,11 +77,14 @@ function getPossibleMoves(piece) {
 
         const targetCell = document.getElementById(`${newRow}-${newCol}`);
         if (targetCell.piece) {
+
+
+
+
             if (targetCell.piece.color === piece.color) {
                 return; // Same color, stop recursion
             } else {
                 possibleMoves.push([newRow, newCol]);
-                console.log(`Piece captured: ${targetCell.piece.icon} at [${newRow}, ${newCol}]`);
                 return; // Different color, allow but stop recursion
             }
         } else {
@@ -164,3 +101,45 @@ function getPossibleMoves(piece) {
     return possibleMoves;
 }
 
+// Function to add click event listeners to each cell
+function addClickListeners() {
+    const cells = document.querySelectorAll('.grid-cell');
+    cells.forEach(cell => {
+        cell.addEventListener('click', () => {
+            if (cell.piece) {
+                possibleMoves = getPossibleMoves(cell.piece);
+                activePiece = cell.piece; // Set the active piece
+                highlightCells(possibleMoves);
+            } else {
+                const cellId = cell.id;
+                const moveExists = possibleMoves.some(move => move.join('-') === cellId);
+
+                if (moveExists) {
+                    
+                    // If the cell has a piece, capture it and log details
+                    if (cell.piece) {
+                        console.log(`KILL! Captured piece: ${cell.piece.icon} (color: ${cell.piece.color}) at [${cell.id}]`);
+                        cell.piece = null; // Remove the captured piece
+                        
+                    }
+
+                    // Move the active piece
+                    const [newRow, newCol] = cellId.split('-').map(Number);
+                    const oldCellId = `${activePiece.row}-${activePiece.col}`;
+                    const oldCell = document.getElementById(oldCellId);
+                    if (oldCell) {
+                        oldCell.innerHTML = '';
+                        oldCell.piece = null;
+                    }
+
+                    activePiece.row = newRow;
+                    activePiece.col = newCol;
+                    activePiece.placeOnBoard();
+
+                    activePiece = null; // Clear the active piece after move
+                } else {
+                }
+            }
+        });
+    });
+}
