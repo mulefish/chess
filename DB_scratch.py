@@ -1,6 +1,8 @@
 
 
 from helpers.pretty_print import yellow, cyan, log, green
+from datetime import datetime
+import pandas as pd
 
 import sqlite3
 
@@ -79,6 +81,37 @@ def get_highest_paid_employee_per_department():
         print(f"Error: {e}")
         return []
 
+def calculate_and_insert_averages():
+    try:
+        conn = sqlite3.connect('employee_management.db')
+        cursor = conn.cursor()
+        
+        # Get the average salary and hire date for each department
+        query = '''
+        SELECT department_id, AVG(salary), AVG(strftime('%s', hire_date)) 
+        FROM employees 
+        GROUP BY department_id
+        '''
+        cursor.execute(query)
+        results = cursor.fetchall()
+        for thing in results: 
+            print(thing )
+        conn.commit()
+        conn.close()
+
+        return "Average values calculated and inserted successfully."
+    except sqlite3.Error as e:
+        print(f"Error: {e}")
+        return "An error occurred."
+
+
+
+def sort_by_salary_asc(employee_data): 
+    return sorted(employee_data, key=lambda x: x[3], reverse=True)
+
+def sort_by_salary_desc(employee_data): 
+    return sorted(employee_data, key=lambda x: x[3], reverse=False)
+
 
 def sort_by_salary(employee_data): return sorted(employee_data, key=lambda x: x[3])
 
@@ -97,6 +130,20 @@ if __name__ == '__main__':
 
     yellow('print(get_highest_paid_employee_per_department')
     salaries = get_highest_paid_employee_per_department()
-    x = sort_by_salary(salaries)
+    x = sort_by_salary_asc(salaries)
     for thing in x:
         print(thing)
+
+    cyan("flip sort")
+    salaries = get_highest_paid_employee_per_department()
+    x = sort_by_salary_desc(salaries)
+    for thing in x: 
+        print(thing)
+
+
+
+    yellow("calculate_and_insert_averages")
+    x = calculate_and_insert_averages()
+    print(x)
+
+
