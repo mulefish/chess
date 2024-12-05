@@ -1,35 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chess!</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='chess.css') }}">
 </head>
-<body>whoseTurn
-    <div id="whoseTurn"></div>
-    <table border="1">
-        <tr>
-            <td valign="'top">
-                <div id="chess-board">{{ html_grid|safe }}</div>
 
+<body>
+    <table border="0">
+        <tr>
+            <td rowspan="4" valign="top">
+                <div id="chess-board">{{ html_grid|safe }}</div>
             </td>
             <td valign="top">
-                Active
-                <div id="activePiece"></div>
-                <br/>
-                White
-                <div id="killedWhite"></div>
-                <br/>
-                Black
-                <div id="killedBlack"></div>
-                <br/>
+                <table>
+                    <tr>
+                        <td>
+                            <div id="whoseTurn">&nbsp;</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="activePiece">&nbsp;</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="killedWhite">&nbsp;</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="killedBlack">&nbsp;</div>
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
     </table>
-    <script src="{{ url_for('static', filename='chess_helper.js') }}"></script>
-    <script src="{{ url_for('static', filename='chess.js') }}"></script>
 
 
 </body>
+
+</html>
+<script src="{{ url_for('static', filename='chess_helper.js') }}"></script>
+<script src="{{ url_for('static', filename='chess.js') }}"></script>
+</body>
+
 </html>

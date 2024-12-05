@@ -3,14 +3,9 @@ let possibleMoves = [];
 let currentTurn = "WHITE";
 
 function movePieceToCell(piece, cell) {
-    if (cell.piece) {
-        // Log details of the captured piece
-        console.log(`Captured piece: ${cell.piece.key}, ${cell.piece.icon} (color: ${cell.piece.color}) at [${cell.id}]`);
-        
-        // Remove the captured piece element from the DOM
+    if (cell.piece) {        
         const capturedPieceElement = cell.querySelector('.chess-piece');
         if (capturedPieceElement) {
-            console.log(capturedPieceElement);
             cell.removeChild(capturedPieceElement);
         }
         const icon = pieces[cell.piece.key].icon;
@@ -19,14 +14,9 @@ function movePieceToCell(piece, cell) {
         } else {
             document.getElementById("killedWhite").innerHTML += " " + icon;
         }
-        // Delete the captured piece from the pieces dictionary
         delete pieces[cell.piece.key];
-        
-        // Confirm deletion by logging current pieces keys
         let keys = Object.keys(pieces);
-        console.log(`Remaining pieces: ${keys.length}`, keys);
-
-        cell.piece = null; // Remove the captured piece reference
+        cell.piece = null;
     }
 
     const [newRow, newCol] = cell.id.split('-').map(Number);
@@ -53,32 +43,27 @@ function addClickListeners() {
     const cells = document.querySelectorAll('.grid-cell');
     cells.forEach(cell => {
         cell.addEventListener('click', () => {
+            console.log("%c CLICK!! " + new Date().getMilliseconds(), "background-color:yellow") 
             if (activePiece) {
                 const cellId = cell.id;
                 const moveExists = possibleMoves.some(move => move.join('-') === cellId);
 
                 if (moveExists) {
-                    console.log(`YAY  LAND HERE Clicked on cell: ${cell.id}`);
                     movePieceToCell(activePiece, cell);
                     activePiece = null;
                     zeroOutActive();
                 } else {
-                    console.log(`Invalid move. Clearing active piece and possible moves.`);
                     zeroOutActive();
                 }
             } else if (cell.piece) {
-                console.log( "c.p.c=" + cell.piece.color + " ct=" + currentTurn)
                 if (cell.piece.color === currentTurn) {
                     possibleMoves = getPossibleMoves(cell.piece);
                     activePiece = cell.piece;
                     setActivePiece(cell.piece);
                     highlightCells(possibleMoves);
-                    console.log(`YAY Clicked on cell: ${cell.id}, Piece: ${cell.piece.icon} key: ${cell.piece.key} and ` + JSON.stringify(possibleMoves));
                 } else {
-                    console.log(`Not your turn. Current turn is: ${currentTurn}`);
                 }
             } else {
-                console.log(`BOO Clicked on cell: ${cell.id}`);
                 zeroOutActive();
             }
         });
@@ -114,6 +99,42 @@ function highlightCells(possibleMoves) {
     });
 }
 
+// function getPossibleMoves(piece) {
+//     const startRow = piece.row;
+//     const startCol = piece.col;
+//     const possibleMoves = [];
+
+//     function recurse(row, col, direction, depth, isPawn) {
+//         if (depth === 0) return;
+
+//         const [dr, dc] = direction;
+//         const newRow = row + dr;
+//         const newCol = col + dc;
+
+//         if (!isValidMove(newRow, newCol)) return;
+
+//         const targetCell = document.getElementById(`${newRow}-${newCol}`);
+//         if (targetCell.piece) {
+//             if (targetCell.piece.color === piece.color) {
+//                 return; 
+//             } else {
+//                 possibleMoves.push([newRow, newCol]);
+//                 return; 
+//             }
+//         } else {
+//             possibleMoves.push([newRow, newCol]);
+//         }
+
+//         recurse(newRow, newCol, direction, depth - 1, isPawn);
+//     }
+
+//     for (const direction of piece.moves) {
+//         recurse(startRow, startCol, direction, piece.recurseDepth, piece.isPawn);
+//     }
+
+//     return possibleMoves;
+// }
+
 function getPossibleMoves(piece) {
     const startRow = piece.row;
     const startCol = piece.col;
@@ -129,26 +150,63 @@ function getPossibleMoves(piece) {
         if (!isValidMove(newRow, newCol)) return;
 
         const targetCell = document.getElementById(`${newRow}-${newCol}`);
-        if (targetCell.piece) {
-            if (targetCell.piece.color === piece.color) {
-                return; 
+
+        if (piece.isPawn) {
+            if (dc === 0) {  // Forward moves
+                if (!targetCell.piece) {
+                    possibleMoves.push([newRow, newCol]);
+                    // Check for the initial two-cell jump
+                    if (piece.moveCount === 0 && depth === 2) {
+                        const twoCellJump = document.getElementById(`${newRow + dr}-${newCol}`);
+                        if (twoCellJump && !twoCellJump.piece) {
+                            possibleMoves.push([newRow + dr, newCol]);
+                        }
+                    }
+                }
+            } else {  // Diagonal attacks
+                if (targetCell.piece && targetCell.piece.color !== piece.color) {
+                    possibleMoves.push([newRow, newCol]);
+                }
+            }
+            return; // No need to recurse for pawns
+        } else {
+            if (targetCell.piece) {
+                if (targetCell.piece.color === piece.color) {
+                    return; 
+                } else {
+                    possibleMoves.push([newRow, newCol]);
+                    return; 
+                }
             } else {
                 possibleMoves.push([newRow, newCol]);
-                return; 
             }
-        } else {
-            possibleMoves.push([newRow, newCol]);
-        }
 
-        recurse(newRow, newCol, direction, depth - 1);
+            recurse(newRow, newCol, direction, depth - 1);
+        }
     }
 
     for (const direction of piece.moves) {
         recurse(startRow, startCol, direction, piece.recurseDepth);
     }
 
+    // Add possible attacks for pawns separately
+    if (piece.isPawn) {
+        for (const attack of piece.attacks) {
+            const [dr, dc] = attack;
+            const attackRow = startRow + dr;
+            const attackCol = startCol + dc;
+            if (isValidMove(attackRow, attackCol)) {
+                const attackCell = document.getElementById(`${attackRow}-${attackCol}`);
+                if (attackCell.piece && attackCell.piece.color !== piece.color) {
+                    possibleMoves.push([attackRow, attackCol]);
+                }
+            }
+        }
+    }
+
     return possibleMoves;
 }
+
 
 function zeroOutActive() {
     activePiece = null;

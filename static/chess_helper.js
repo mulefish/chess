@@ -14,6 +14,8 @@ const KING_W = "♔";
 const PAWN_W = "♙";
 const BLACK = "BLACK";
 const WHITE = "WHITE";
+const LETTERS = ["a", "b", "c","d","e", "f","g","h"]
+
 
 function getPossibleMoveArrays(icon) {
     switch (icon) {
@@ -106,12 +108,35 @@ class Piece {
         this.col = col;
         this.recurseDepth = recurseDepth;
         this.moves = getPossibleMoveArrays(icon);
+        this.attacks = this.moves; 
+        this.isPawn = false;
+        this.isKing = false; 
+        if ( this.icon === PAWN_B) {
+            this.attacks = [[1, -1], [1, -1]];
+            this.isPawn = true 
+        } else if ( this.icon === PAWN_W ) {
+            this.attacks = [[-1, -1], [-1, -1]];
+            this.isPawn = true 
+        }
+        this.moveCount = -1;
+        this.lastMove = undefined 
     }
 
     placeOnBoard() {
         const cellId = `${this.row}-${this.col}`;
         const cell = document.getElementById(cellId);
         if (cell) {
+            this.moveCount++;
+            if ( this.moveCount > 0 ) {
+                // this.lastMove = (8 - (-1 + ( 8 - this.row ))) + LETTERS[this.col]
+                this.lastMove = (1 + this.row) + LETTERS[this.col]
+                console.log("row " + this.row + " col " + this.col + "  key " + this.key + " icon " + this.icon + " move " + this.lastMove ) 
+                if ( this.icon === PAWN_B || this.icon === PAWN_W ) {
+                    this.recurseDepth = 1;
+                }
+            }
+
+
             cell.classList.add('unselectable'); // Make the icon unselectable
             const pieceElement = document.createElement('span');
             pieceElement.className = 'chess-piece';
@@ -123,3 +148,5 @@ class Piece {
         }
     }
 }
+
+
