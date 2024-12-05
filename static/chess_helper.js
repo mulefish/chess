@@ -1,3 +1,5 @@
+// This file is for things that I am very certain of. 
+
 const PAWN_B = "♟";
 const ROOK_B = "♜";
 const KNIGHT_B = "♞";
@@ -93,4 +95,31 @@ function getPieces() {
     p['pw7'] = new Piece('pw7', WHITE, PAWN_W, 6, 6, 2);
     p['pw8'] = new Piece('pw8', WHITE, PAWN_W, 6, 7, 2);
     return p
+}
+
+class Piece {
+    constructor(key, color, icon, row, col, recurseDepth) {
+        this.key = key;
+        this.color = color;
+        this.icon = icon;
+        this.row = row;
+        this.col = col;
+        this.recurseDepth = recurseDepth;
+        this.moves = getPossibleMoveArrays(icon);
+    }
+
+    placeOnBoard() {
+        const cellId = `${this.row}-${this.col}`;
+        const cell = document.getElementById(cellId);
+        if (cell) {
+            cell.classList.add('unselectable'); // Make the icon unselectable
+            const pieceElement = document.createElement('span');
+            pieceElement.className = 'chess-piece';
+            pieceElement.innerHTML = this.icon;
+            cell.appendChild(pieceElement);
+            cell.piece = this;
+        } else {
+            console.log(`Cell with id ${cellId} not found`);
+        }
+    }
 }

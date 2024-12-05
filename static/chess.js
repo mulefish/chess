@@ -1,87 +1,28 @@
 let activePiece = null;
 let possibleMoves = [];
 
-// class Piece {
-//     constructor(key, color, icon, row, col, recurseDepth) {
-//         this.key = key;
-//         this.color = color;
-//         this.icon = icon;
-//         this.row = row;
-//         this.col = col;
-//         this.recurseDepth = recurseDepth;
-//         this.moves = getPossibleMoveArrays(icon);
-//     }
-
-//     // placeOnBoard() {
-//     //     const cellId = `${this.row}-${this.col}`;
-//     //     const cell = document.getElementById(cellId);
-//     //     if (cell) {
-//     //         cell.classList.add('unselectable'); // Make the icon unselectable
-//     //         cell.innerHTML = "<span class='chess-piece'>" + this.icon + "</span>";
-//     //         cell.piece = this;
-//     //     } else {
-//     //         console.log(`Cell with id ${cellId} not found`);
-//     //     }
-//     // }
-
-//     placeOnBoard() {
-//         const cellId = `${this.row}-${this.col}`;
-//         const cell = document.getElementById(cellId);
-//         if (cell) {
-//             cell.classList.add('unselectable'); // Make the icon unselectable
-//             const pieceElement = document.createElement('span');
-//             pieceElement.className = 'chess-piece';
-//             pieceElement.innerHTML = this.icon;
-//             cell.appendChild(pieceElement);
-//             cell.piece = this;
-//         } else {
-//             console.log(`Cell with id ${cellId} not found`);
-//         }
-//     }
-
-    
-// }
-
-
-class Piece {
-    constructor(key, color, icon, row, col, recurseDepth) {
-        this.key = key;
-        this.color = color;
-        this.icon = icon;
-        this.row = row;
-        this.col = col;
-        this.recurseDepth = recurseDepth;
-        this.moves = getPossibleMoveArrays(icon);
-    }
-
-    placeOnBoard() {
-        const cellId = `${this.row}-${this.col}`;
-        const cell = document.getElementById(cellId);
-        if (cell) {
-            cell.classList.add('unselectable'); // Make the icon unselectable
-            const pieceElement = document.createElement('span');
-            pieceElement.className = 'chess-piece';
-            pieceElement.innerHTML = this.icon;
-            cell.appendChild(pieceElement);
-            cell.piece = this;
-        } else {
-            console.log(`Cell with id ${cellId} not found`);
-        }
-    }
-}
-
 function movePieceToCell(piece, cell) {
-    // If the cell has a piece, capture it and log details
     if (cell.piece) {
-        console.log(`Captured piece: ${cell.piece.icon} (color: ${cell.piece.color}) at [${cell.id}]`);
+        // Log details of the captured piece
+        console.log(`Captured piece: ${cell.piece.key}, ${cell.piece.icon} (color: ${cell.piece.color}) at [${cell.id}]`);
+        
+        // Remove the captured piece element from the DOM
         const capturedPieceElement = cell.querySelector('.chess-piece');
         if (capturedPieceElement) {
+            console.log(capturedPieceElement);
             cell.removeChild(capturedPieceElement);
         }
-        cell.piece = null; // Remove the captured piece
+
+        // Delete the captured piece from the pieces dictionary
+        delete pieces[cell.piece.key];
+        
+        // Confirm deletion by logging current pieces keys
+        let keys = Object.keys(pieces);
+        console.log(`Remaining pieces: ${keys.length}`, keys);
+
+        cell.piece = null; // Remove the captured piece reference
     }
 
-    // Move the active piece
     const [newRow, newCol] = cell.id.split('-').map(Number);
     const oldCellId = `${piece.row}-${piece.col}`;
     const oldCell = document.getElementById(oldCellId);
@@ -110,31 +51,31 @@ function addClickListeners() {
                     console.log(`YAY  LAND HERE Clicked on cell: ${cell.id}`);
                     movePieceToCell(activePiece, cell);
                     activePiece = null;
-
-                    // Clear highlights after moving the piece
                     zeroOutActive();
                 } else {
+                    console.log(`Invalid move. Clearing active piece and possible moves.`);
                     zeroOutActive();
                 }
             } else if (cell.piece) {
                 possibleMoves = getPossibleMoves(cell.piece);
-                activePiece = cell.piece; // Set the active piece
+                activePiece = cell.piece;
                 setActivePiece(cell.piece);
                 highlightCells(possibleMoves);
                 console.log(`YAY Clicked on cell: ${cell.id}, Piece: ${cell.piece.icon} key: ${cell.piece.key} and ` + JSON.stringify(possibleMoves));
             } else {
                 console.log(`BOO Clicked on cell: ${cell.id}`);
+                zeroOutActive();
             }
         });
     });
 }
 
-
 function setActivePiece(piece) {
+    const activePieceElement = document.getElementById("activePiece");
     if (piece == null) {
-        document.getElementById("activePiece").innerHTML = "";
+        activePieceElement.innerHTML = "";
     } else {
-        document.getElementById("activePiece").innerHTML = piece.key + " " + piece.icon;
+        activePieceElement.innerHTML = piece.key + " " + piece.icon;
     }
 }
 
@@ -175,10 +116,10 @@ function getPossibleMoves(piece) {
         const targetCell = document.getElementById(`${newRow}-${newCol}`);
         if (targetCell.piece) {
             if (targetCell.piece.color === piece.color) {
-                return; // Same color, stop recursion
+                return; 
             } else {
                 possibleMoves.push([newRow, newCol]);
-                return; // Different color, allow but stop recursion
+                return; 
             }
         } else {
             possibleMoves.push([newRow, newCol]);
@@ -195,61 +136,14 @@ function getPossibleMoves(piece) {
 }
 
 function zeroOutActive() {
-    setActivePiece(null);
+    activePiece = null;
     possibleMoves = [];
-    highlightCells(possibleMoves);
-}
-/* 
-// // Function to add click event listeners to each cell
-function addClickListeners() {
     const cells = document.querySelectorAll('.grid-cell');
     cells.forEach(cell => {
-        cell.addEventListener('click', () => {
-            if (activePiece) {
-                const cellId = cell.id;
-                const moveExists = possibleMoves.some(move => move.join('-') === cellId);
-
-                if (moveExists) {
-                    console.log(`YAY  LAND HERE Clicked on cell: ${cell.id}`);
-
-                    // If the cell has a piece, capture it and log details
-                    if (cell.piece) {
-                        console.log(`Captured piece: ${cell.piece.icon} (color: ${cell.piece.color}) at [${cell.id}]`);
-                        cell.piece = null; // Remove the captured piece
-                    }
-
-                    // Move the active piece
-                    const [newRow, newCol] = cellId.split('-').map(Number);
-                    const oldCellId = `${activePiece.row}-${activePiece.col}`;
-                    const oldCell = document.getElementById(oldCellId);
-                    if (oldCell) {
-                        oldCell.innerHTML = '';
-                        oldCell.piece = null;
-                    }
-
-                    activePiece.row = newRow;
-                    activePiece.col = newCol;
-                    activePiece.placeOnBoard();
-                    activePiece = null;
-
-                    // Clear highlights after moving the piece
-                    zeroOutActive();
-                } else {
-                    zeroOutActive();
-                }
-            } else if (cell.piece) {
-                possibleMoves = getPossibleMoves(cell.piece);
-                activePiece = cell.piece; // Set the active piece
-                setActivePiece(cell.piece);
-                highlightCells(possibleMoves);
-                console.log(`YAY Clicked on cell: ${cell.id}, Piece: ${cell.piece.icon} key: ${cell.piece.key} and ` + JSON.stringify(possibleMoves));
-            } else {
-                console.log(`BOO Clicked on cell: ${cell.id}`);
-            }
-        });
+        cell.classList.remove('highlighted');
     });
+    setActivePiece(null);
 }
-*/ 
 
 document.addEventListener('DOMContentLoaded', () => {
     pieces = getPieces();
@@ -258,8 +152,5 @@ document.addEventListener('DOMContentLoaded', () => {
         const k = keys[i];
         pieces[k].placeOnBoard();
     }
-    // Adding click event listeners
     addClickListeners();
 });
-
-
