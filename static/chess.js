@@ -1,5 +1,6 @@
 let activePiece = null;
 let possibleMoves = [];
+let currentTurn = "WHITE";
 
 function movePieceToCell(piece, cell) {
     if (cell.piece) {
@@ -12,12 +13,11 @@ function movePieceToCell(piece, cell) {
             console.log(capturedPieceElement);
             cell.removeChild(capturedPieceElement);
         }
-        const icon = pieces[cell.piece.key].icon
-        if ( pieces[cell.piece.key].color === BLACK ) { 
-            document.getElementById("killedBlack").innerHTML += " " + icon 
+        const icon = pieces[cell.piece.key].icon;
+        if (pieces[cell.piece.key].color === BLACK) { 
+            document.getElementById("killedBlack").innerHTML += " " + icon; 
         } else {
-            document.getElementById("killedWhite").innerHTML += " " + icon 
-
+            document.getElementById("killedWhite").innerHTML += " " + icon;
         }
         // Delete the captured piece from the pieces dictionary
         delete pieces[cell.piece.key];
@@ -43,6 +43,10 @@ function movePieceToCell(piece, cell) {
     piece.row = newRow;
     piece.col = newCol;
     piece.placeOnBoard();
+
+    // Change the turn after the piece is moved
+    currentTurn = currentTurn === WHITE ? BLACK: WHITE;
+    document.getElementById("whoseTurn").innerHTML = currentTurn;
 }
 
 function addClickListeners() {
@@ -63,11 +67,16 @@ function addClickListeners() {
                     zeroOutActive();
                 }
             } else if (cell.piece) {
-                possibleMoves = getPossibleMoves(cell.piece);
-                activePiece = cell.piece;
-                setActivePiece(cell.piece);
-                highlightCells(possibleMoves);
-                console.log(`YAY Clicked on cell: ${cell.id}, Piece: ${cell.piece.icon} key: ${cell.piece.key} and ` + JSON.stringify(possibleMoves));
+                console.log( "c.p.c=" + cell.piece.color + " ct=" + currentTurn)
+                if (cell.piece.color === currentTurn) {
+                    possibleMoves = getPossibleMoves(cell.piece);
+                    activePiece = cell.piece;
+                    setActivePiece(cell.piece);
+                    highlightCells(possibleMoves);
+                    console.log(`YAY Clicked on cell: ${cell.id}, Piece: ${cell.piece.icon} key: ${cell.piece.key} and ` + JSON.stringify(possibleMoves));
+                } else {
+                    console.log(`Not your turn. Current turn is: ${currentTurn}`);
+                }
             } else {
                 console.log(`BOO Clicked on cell: ${cell.id}`);
                 zeroOutActive();
@@ -159,4 +168,5 @@ document.addEventListener('DOMContentLoaded', () => {
         pieces[k].placeOnBoard();
     }
     addClickListeners();
+    document.getElementById("whoseTurn").innerHTML = currentTurn; // Initialize turn display
 });

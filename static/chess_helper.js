@@ -12,8 +12,8 @@ const BISHOP_W = "♗";
 const QUEEN_W = "♕";
 const KING_W = "♔";
 const PAWN_W = "♙";
-const BLACK = "black";
-const WHITE = "white";
+const BLACK = "BLACK";
+const WHITE = "WHITE";
 
 function getPossibleMoveArrays(icon) {
     switch (icon) {
