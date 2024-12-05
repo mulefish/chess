@@ -12,7 +12,13 @@ function movePieceToCell(piece, cell) {
             console.log(capturedPieceElement);
             cell.removeChild(capturedPieceElement);
         }
+        const icon = pieces[cell.piece.key].icon
+        if ( pieces[cell.piece.key].color === BLACK ) { 
+            document.getElementById("killedBlack").innerHTML += " " + icon 
+        } else {
+            document.getElementById("killedWhite").innerHTML += " " + icon 
 
+        }
         // Delete the captured piece from the pieces dictionary
         delete pieces[cell.piece.key];
         
