@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chess!</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='chess.css') }}">
@@ -41,12 +42,22 @@
         </tr>
     </table>
 
+    <script>
+        function getInfo()  {
+            const x = document.getElementById("chess-board")
+
+
+            frtp = x.getBoundingClientRect()
+            console.log( frtp )
+        }
+        </script>
+        <button onclick="getInfo()">getInf</button>
 
 </body>
 
 </html>
-<script src="{{ url_for('static', filename='chess_helper.js') }}"></script>
-<script src="{{ url_for('static', filename='chess.js') }}"></script>
+<script src="{{ url_for('static', filename='simple_helper.js') }}"></script>
+<script src="{{ url_for('static', filename='simple.js') }}"></script>
 </body>
 
 </html>
