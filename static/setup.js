@@ -69,7 +69,6 @@ function init() {
             this.pieceRef = undefined
         }
         setPiece(key) {
-
             this.pieceRef = key
         }
         getId() {
@@ -124,7 +123,7 @@ function init() {
             if (this.movedCount === 1) {
                 this.special()
             }
-            board[this.row][this.col].setPiece(this.icon)
+            board[this.row][this.col].setPiece(this.key)
         }
 
         getPossibleMoves() {
@@ -148,22 +147,51 @@ function init() {
 
                     if (targetCell.pieceRef) {
                         const targetPiece = pieces[targetCell.pieceRef];
-                        if (targetPiece && targetPiece.color !== this.color) {
-                            possibleMoves.push([r, c]); // Can capture enemy piece
-                        }
-                        break; // Stop further movement in this direction
+                        break; // Stop further movement in this direction!
                     }
 
                     possibleMoves.push([r, c]);
 
-                    if (this.depth > 0 && step >= this.depth) break; // Respect movement depth
+                    if (this.depth > 0 && step >= this.depth) break;
                 }
             });
 
             return possibleMoves;
         }
-    }
 
+
+
+        getPossibleAttacks() {
+            let possibleAttacks = [];
+
+            const isWithinBounds = (r, c) => r >= 0 && r < 8 && c >= 0 && c < 8;
+
+            this.moves.forEach(([dr, dc]) => {
+                let r = this.row;
+                let c = this.col;
+                let step = 0;
+
+                while (true) {
+                    r += dr;
+                    c += dc;
+                    step++;
+
+                    if (!isWithinBounds(r, c)) break;
+                    const targetCell = board[r][c];
+                    if (targetCell.pieceRef) {
+                        const targetPiece = pieces[targetCell.pieceRef];
+                        if (targetPiece && targetPiece.color !== this.color) {
+                            possibleAttacks.push([r, c]); // Can capture enemy piece!
+                        }
+                        break;
+                    }
+
+                    if (this.depth > 0 && step >= this.depth) break;
+                }
+            });
+            return possibleAttacks;
+        }
+    }
     class BlackPawn extends Piece {
         setHowToMove() {
             this.moves = getHowToMove(this.icon)
@@ -186,42 +214,30 @@ function init() {
     new WhitePawn("wp1", PAWN_W, WHITE, 6, 0, 2)
     new WhitePawn("wp2", PAWN_W, WHITE, 6, 1, 2)
     new King("wk1", KING_W, WHITE, 7, 4, 1)
-
-
-
     new Piece("wr2", ROOK_W, WHITE, 7, 7, 8)
 
     new BlackPawn("bp1", PAWN_B, BLACK, 1, 0, 2)
-    new WhitePawn("bp2", PAWN_B, BLACK, 1, 1, 2)
+    new WhitePawn("bp2", PAWN_B, BLACK, 1, 7, 2)
 }
 
-// function showBoard(possible) {
-//     let x = "\n"
-//     board.forEach((row) => {
-//         row.forEach((col) => {
-//             x += col.getId() + " "
-//         })
-//         x += "\n"
-//     })
-//     console.log(x)
-
-// }
-
-function showBoard(possible) {
-    let matrix = [] 
-    for ( let row = 0; row < board.length; row++ ) { 
-        matrix[row] = [] 
-        for ( let col = 0 ; col < board[row].length; col++ ) { 
+function showBoard(possible, attacks) {
+    let matrix = []
+    for (let row = 0; row < board.length; row++) {
+        matrix[row] = []
+        for (let col = 0; col < board[row].length; col++) {
             matrix[row][col] = board[row][col].getId() + " "
-        } 
+        }
     }
 
-    possible.forEach((rowCol)=> { 
-        const [r, c] = rowCol 
-        matrix[r][c]="x"
+    possible.forEach((rowCol) => {
+        const [r, c] = rowCol
+        matrix[r][c] = "x"
     })
 
-
+    attacks.forEach((rowCol) => {
+        const [r, c] = rowCol
+        matrix[r][c] = "A"
+    })
 
     let x = "\n"
     matrix.forEach((row) => {
