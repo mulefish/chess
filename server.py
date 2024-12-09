@@ -42,6 +42,12 @@ def chess():
     return render_template('chess.html', html_grid=html_grid)
 
 
+@app.route('/version2')
+def version2():
+    html_grid = create_html_grid()
+    return render_template('version2.html')
+
+
 if __name__ == '__main__':
     #cyan("http://34.83.236.108:8080 with database at data/dispense.db")
     cyan("http://localhost:8080/")

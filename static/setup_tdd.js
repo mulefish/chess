@@ -4,10 +4,10 @@ init()
 pieces["bp1"].setRowCol(5,2)
 
 const possible = pieces["bp1"].getPossibleMoves() 
-const possibleAttacks = pieces["bp1"].getPossibleAttacks() 
+// const possibleAttacks = pieces["bp1"].getPossibleAttacks() 
 
 
-console.log("possibleAttacks: " + possibleAttacks )
-showBoard(possible, possibleAttacks)
+showBoard(possible, [] ) 
 
+console.log( possible)
 // console.log(m )

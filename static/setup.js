@@ -132,6 +132,7 @@ function init() {
             const isWithinBounds = (r, c) => r >= 0 && r < 8 && c >= 0 && c < 8;
 
             this.moves.forEach(([dr, dc]) => {
+                console.log( "row=" + dr + " col=" + dc )
                 let r = this.row;
                 let c = this.col;
                 let step = 0;
