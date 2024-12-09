@@ -73,13 +73,14 @@ function movePiece(event) {
     // Check if there's a piece on the target cell
     const targetPiece = boardState[targetRow][targetCol];
     if (targetPiece && targetPiece.color !== selectedPiece.color) {
-        console.log(`Piece removed: ${targetPiece.icon}`);
+        console.log(`Attackee removed: ${targetPiece.icon}`);
         targetCell.innerHTML = ''; // Clear the target cell
         boardState[targetRow][targetCol] = null; // Remove the piece from the board state
     }
 
+    // Move the selected piece to the new location
     const oldCell = document.getElementById(`${selectedPiece.row}-${selectedPiece.col}`);
-    oldCell.innerHTML = ''; // Clear the piece from the old cell
+    oldCell.innerHTML = ''; // Clear the selected piece from the old cell
 
     boardState[selectedPiece.row][selectedPiece.col] = null; // Clear the state of the old cell
     selectedPiece.row = targetRow;
@@ -92,14 +93,17 @@ function movePiece(event) {
     selectedPiece = null;
 
     // Reinitialize the event listeners for all pieces
+    reinitializeEventListeners();
+    updatePieceInfo(selectedPiece, 'selected'); // Update selected piece info
+}
+
+function reinitializeEventListeners() {
     pieces.forEach(piece => {
         const cell = document.getElementById(`${piece.row}-${piece.col}`);
         cell.innerHTML = piece.icon;
         cell.removeEventListener('click', pieceClickListener); // Remove the old listener
         cell.addEventListener('click', pieceClickListener); // Add the new listener
     });
-
-    updatePieceInfo(selectedPiece, 'selected'); // Update selected piece info
 }
 
 function pieceClickListener(event) {
@@ -110,18 +114,32 @@ function pieceClickListener(event) {
     // Add this null check to prevent errors
     if (!piece) return;
 
-    if (selectedPiece) {
-        // Check if the selected piece is under attack and being landed on
-        if (piece.row === selectedPiece.row && piece.col === selectedPiece.col) {
-            const oldCell = document.getElementById(`${selectedPiece.row}-${selectedPiece.col}`);
-            oldCell.innerHTML = ''; // Clear the piece from the old cell
+    if (cell.classList.contains('attack')) {
+        // Log the attacker and the attackee to the console
+        console.log(`Attackee: ${piece.icon}`);
+        console.log(`Attacker: ${selectedPiece.icon}`);
 
-            boardState[selectedPiece.row][selectedPiece.col] = null; // Clear the state of the old cell
-            selectedPiece = null;
-            clearHighlights();
-            updatePieceInfo(selectedPiece, 'selected'); // Update selected piece info
-            return;
-        }
+        // Remove the attacked piece
+        cell.innerHTML = ''; // Clear the attacked piece from the cell
+        boardState[row][col] = null; // Remove the piece from the board state
+
+        // Move the selected piece to the new location
+        const oldCell = document.getElementById(`${selectedPiece.row}-${selectedPiece.col}`);
+        oldCell.innerHTML = ''; // Clear the selected piece from the old cell
+
+        boardState[selectedPiece.row][selectedPiece.col] = null; // Clear the state of the old cell
+        selectedPiece.row = row;
+        selectedPiece.col = col;
+        boardState[row][col] = selectedPiece; // Update the state of the new cell
+
+        cell.innerHTML = selectedPiece.icon; // Place the selected piece in the new cell
+
+        clearHighlights();
+        selectedPiece = null;
+
+        reinitializeEventListeners();
+        updatePieceInfo(selectedPiece, 'selected'); // Update selected piece info
+        return;
     }
 
     if (selectedPiece === piece) {
