@@ -1,5 +1,5 @@
 const boardState = Array(8).fill(null).map(() => Array(8).fill(null));
-const pieces = getPieces()
+const pieces = getPieces();
 
 pieces.forEach(piece => {
     boardState[piece.row][piece.col] = piece;
@@ -58,26 +58,35 @@ function movePiece(event) {
     pieces.forEach(piece => {
         const cell = document.getElementById(`${piece.row}-${piece.col}`);
         cell.innerHTML = piece.icon;
-        cell.addEventListener('click', () => {
-            clearHighlights();
-            selectedPiece = piece;
-            highlightMoves(piece.getPossibleMoves(boardState));
-        });
+        cell.removeEventListener('click', pieceClickListener); // Remove the old listener
+        cell.addEventListener('click', pieceClickListener); // Add the new listener
     });
 }
 
+function pieceClickListener(event) {
+    const cell = event.currentTarget;
+    const [row, col] = cell.id.split('-').map(Number);
+    const piece = boardState[row][col];
 
-pieces.forEach(piece => {
-    const cell = document.getElementById(`${piece.row}-${piece.col}`);
-    cell.innerHTML = piece.icon;
-    cell.addEventListener('click', () => {
-        if (selectedPiece === piece) {
-            clearHighlights();
-            selectedPiece = null;
-        } else {
-            clearHighlights();
-            selectedPiece = piece;
-            highlightMoves(piece.getPossibleMoves(boardState));
-        }
+    // Add this null check to prevent errors
+    if (!piece) return;
+
+    if (selectedPiece === piece) {
+        clearHighlights();
+        selectedPiece = null;
+    } else {
+        clearHighlights();
+        selectedPiece = piece;
+        highlightMoves(piece.getPossibleMoves(boardState));
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    pieces.forEach(piece => {
+        const cell = document.getElementById(`${piece.row}-${piece.col}`);
+        cell.innerHTML = piece.icon;
+        cell.addEventListener('click', pieceClickListener);
+        boardState[piece.row][piece.col] = piece; // Update board state
     });
 });
