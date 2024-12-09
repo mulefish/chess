@@ -18,6 +18,19 @@ for (let row = 0; row < 8; row++) {
 
 let selectedPiece = null;
 
+function updatePieceInfo(piece, elementId) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        if (piece) {
+            element.innerHTML = `${piece.color} ${piece.type} at ${piece.row}-${piece.col}`;
+        } else {
+            element.innerHTML = 'None';
+        }
+    } else {
+        console.log(`Element with ID ${elementId} not found.`);
+    }
+}
+
 function highlightMoves(moves) {
     moves.forEach(([row, col]) => {
         const cell = document.getElementById(`${row}-${col}`);
@@ -52,8 +65,18 @@ function clearHighlights() {
 function movePiece(event) {
     if (!selectedPiece) return;
 
+    event.stopPropagation(); // Stop the click event from propagating
+
     const targetCell = event.target.closest('.cell');
     const [targetRow, targetCol] = targetCell.id.split('-').map(Number);
+
+    // Check if there's a piece on the target cell
+    const targetPiece = boardState[targetRow][targetCol];
+    if (targetPiece && targetPiece.color !== selectedPiece.color) {
+        console.log(`Piece removed: ${targetPiece.icon}`);
+        targetCell.innerHTML = ''; // Clear the target cell
+        boardState[targetRow][targetCol] = null; // Remove the piece from the board state
+    }
 
     const oldCell = document.getElementById(`${selectedPiece.row}-${selectedPiece.col}`);
     oldCell.innerHTML = ''; // Clear the piece from the old cell
@@ -75,6 +98,8 @@ function movePiece(event) {
         cell.removeEventListener('click', pieceClickListener); // Remove the old listener
         cell.addEventListener('click', pieceClickListener); // Add the new listener
     });
+
+    updatePieceInfo(selectedPiece, 'selected'); // Update selected piece info
 }
 
 function pieceClickListener(event) {
@@ -85,16 +110,31 @@ function pieceClickListener(event) {
     // Add this null check to prevent errors
     if (!piece) return;
 
+    if (selectedPiece) {
+        // Check if the selected piece is under attack and being landed on
+        if (piece.row === selectedPiece.row && piece.col === selectedPiece.col) {
+            const oldCell = document.getElementById(`${selectedPiece.row}-${selectedPiece.col}`);
+            oldCell.innerHTML = ''; // Clear the piece from the old cell
+
+            boardState[selectedPiece.row][selectedPiece.col] = null; // Clear the state of the old cell
+            selectedPiece = null;
+            clearHighlights();
+            updatePieceInfo(selectedPiece, 'selected'); // Update selected piece info
+            return;
+        }
+    }
+
     if (selectedPiece === piece) {
         clearHighlights();
         selectedPiece = null;
     } else {
-            
         clearHighlights();
         selectedPiece = piece;
         highlightMoves(piece.getPossibleMoves(boardState));
         highlightAttacks(piece.getPossibleAttacks(boardState)); // Highlight attackable cells
     }
+
+    updatePieceInfo(selectedPiece, 'selected'); // Update selected piece info
 }
 
 document.addEventListener('DOMContentLoaded', () => {

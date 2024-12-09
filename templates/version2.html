@@ -7,19 +7,19 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
+            /* font-family: Arial, sans-serif;
+            display: flex; */
+            /* justify-content: center; */
+            /* align-items: center;
+            height: 100vh; */
+            /* margin: 20;*/ 
+            /* background-color: #f4f4f4; */
         }
         .chess-board {
             display: grid;
             grid-template-columns: repeat(8, 60px);
             grid-template-rows: repeat(8, 60px);
-            border: 2px solid #000;
+            /*border: 20px solid #000;*/
         }
         .cell {
             width: 60px;
@@ -42,12 +42,16 @@
             pointer-events: none;
         }
         .highlight { background-color: yellow !important; } .attack { background-color: red !important; }
-        
+
     </style>
 </head>
 <body>
-ZOOM
-<br/>
+    Piece: <span id="piece"></span>
+    <br/>
+    Selected!!: <span id="selected"></span>
+    
+
+    <br/>
     <div id="chess-board" class="chess-board"></div>
     <script src="{{ url_for('static', filename='version2_setup.js') }}"></script>
     <script src="{{ url_for('static', filename='version2.js') }}"></script>
