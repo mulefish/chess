@@ -28,9 +28,23 @@ function highlightMoves(moves) {
     });
 }
 
+function highlightAttacks(attacks) {
+    attacks.forEach(([row, col]) => {
+        const cell = document.getElementById(`${row}-${col}`);
+        if (cell) {
+            cell.classList.add('attack');
+            cell.addEventListener('click', movePiece);
+        }
+    });
+}
+
 function clearHighlights() {
     document.querySelectorAll('.highlight').forEach(cell => {
         cell.classList.remove('highlight');
+        cell.removeEventListener('click', movePiece);
+    });
+    document.querySelectorAll('.attack').forEach(cell => {
+        cell.classList.remove('attack');
         cell.removeEventListener('click', movePiece);
     });
 }
@@ -38,7 +52,7 @@ function clearHighlights() {
 function movePiece(event) {
     if (!selectedPiece) return;
 
-    const targetCell = event.target;
+    const targetCell = event.target.closest('.cell');
     const [targetRow, targetCol] = targetCell.id.split('-').map(Number);
 
     const oldCell = document.getElementById(`${selectedPiece.row}-${selectedPiece.col}`);
@@ -75,12 +89,13 @@ function pieceClickListener(event) {
         clearHighlights();
         selectedPiece = null;
     } else {
+            
         clearHighlights();
         selectedPiece = piece;
         highlightMoves(piece.getPossibleMoves(boardState));
+        highlightAttacks(piece.getPossibleAttacks(boardState)); // Highlight attackable cells
     }
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
     pieces.forEach(piece => {

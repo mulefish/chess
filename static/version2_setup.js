@@ -50,6 +50,54 @@ class Piece {
         return moves;
     }
 
+    getPossibleAttacks(board) {
+        let moves = [];
+        switch (this.type) {
+            case 'pawn':
+                const direction = this.color === 'white' ? -1 : 1;
+                const forwardRow = this.row + direction;
+                if (board[forwardRow] && !board[forwardRow][this.col]) {
+                    moves.push([forwardRow, this.col]);
+                }
+                break;
+            case 'rook':
+                moves = this.getLinearAttacks(board, [[1, 0], [0, 1], [-1, 0], [0, -1]]);
+                break;
+            case 'knight':
+                moves = this.getKnightAttacks(board);
+                break;
+            case 'bishop':
+                moves = this.getLinearAttacks(board, [[1, 1], [1, -1], [-1, 1], [-1, -1]]);
+                break;
+            case 'queen':
+                moves = this.getLinearAttacks(board, [[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]);
+                break;
+            case 'king':
+                moves = this.getLinearAttacks(board, [[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]], 1);
+                break;
+        }
+        return moves;
+    }
+
+    getLinearAttacks(board, directions, maxSteps = 8) {
+        const moves = [];
+        for (const [dr, dc] of directions) {
+            for (let step = 1; step <= maxSteps; step++) {
+                const newRow = this.row + dr * step;
+                const newCol = this.col + dc * step;
+                if (newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) break;
+                if (board[newRow][newCol]) {
+                    if (board[newRow][newCol].color !== this.color) {
+                        moves.push([newRow, newCol]);
+                    }
+                    break;
+                }
+                // moves.push([newRow, newCol]);
+            }
+        }
+        return moves;
+    }
+
     getLinearMoves(board, directions, maxSteps = 8) {
         const moves = [];
         for (const [dr, dc] of directions) {
@@ -86,9 +134,31 @@ class Piece {
         }
         return moves;
     }
-}
 
-function getPieces() { 
+
+
+    getKnightAttacks(board) {
+        const moves = [];
+        const deltas = [
+            [2, 1], [2, -1], [-2, 1], [-2, -1],
+            [1, 2], [1, -2], [-1, 2], [-1, -2]
+        ];
+        for (const [dr, dc] of deltas) {
+            const newRow = this.row + dr;
+            const newCol = this.col + dc;
+            if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+                const targetCell = board[newRow][newCol];
+                // Only add the move if the cell houses a piece of a different color
+                if (targetCell && targetCell.color !== this.color) {
+                    moves.push([newRow, newCol]);
+                }
+            }
+        }
+        return moves;
+    }
+    }
+
+function getPieces() {
     const p = [
         new Piece(ROOK_B, 0, 0, 'rook', 'black'),
         new Piece(KNIGHT_B, 0, 1, 'knight', 'black'),
