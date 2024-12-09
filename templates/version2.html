@@ -44,9 +44,13 @@
     </style>
 </head>
 <body>
+ZOOM
+<br/>
     <div id="chess-board" class="chess-board"></div>
+    <script src="{{ url_for('static', filename='version2_setup.js') }}"></script>
+    <script src="{{ url_for('static', filename='version2.js') }}"></script>
 
-    <script>
+    <!-- <script>
         const PAWN_B = '<i class="fas fa-chess-pawn" style="color: black; font-size: 48px;"></i>';
         const ROOK_B = '<i class="fas fa-chess-rook" style="color: black; font-size: 48px;"></i>';
         const KNIGHT_B = '<i class="fas fa-chess-knight" style="color: black; font-size: 48px;"></i>';
@@ -106,9 +110,9 @@
                         const newCol = this.col + dc * step;
                         if (newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) break;
                         if (board[newRow][newCol]) {
-                            if (board[newRow][newCol].color !== this.color) {
-                                moves.push([newRow, newCol]);
-                            }
+                            // if (board[newRow][newCol].color !== this.color) {
+                            //     moves.push([newRow, newCol]);
+                            // }
                             break;
                         }
                         moves.push([newRow, newCol]);
@@ -117,23 +121,26 @@
                 return moves;
             }
 
-            getKnightMoves(board) {
-                const moves = [];
-                const deltas = [
-                    [2, 1], [2, -1], [-2, 1], [-2, -1],
-                    [1, 2], [1, -2], [-1, 2], [-1, -2]
-                ];
-                for (const [dr, dc] of deltas) {
-                    const newRow = this.row + dr;
-                    const newCol = this.col + dc;
-                    if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
-                        if (!board[newRow][newCol] || board[newRow][newCol].color !== this.color) {
-                            moves.push([newRow, newCol]);
-                        }
-                    }
+    getKnightMoves(board) {
+        const moves = [];
+        const deltas = [
+            [2, 1], [2, -1], [-2, 1], [-2, -1],
+            [1, 2], [1, -2], [-1, 2], [-1, -2]
+        ];
+        for (const [dr, dc] of deltas) {
+            const newRow = this.row + dr;
+            const newCol = this.col + dc;
+            if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+                if (!board[newRow][newCol]) {  // Only add the move if the cell is empty
+                    moves.push([newRow, newCol]);
                 }
-                return moves;
             }
+        }
+        return moves;
+    }
+
+
+
         }
 
         const boardState = Array(8).fill(null).map(() => Array(8).fill(null));
@@ -298,6 +305,6 @@ function movePiece(event) {
                 }
             });
         });
-    </script>
+    </script> -->
 </body>
 </html>
