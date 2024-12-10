@@ -62,6 +62,8 @@ function clearHighlights() {
     });
 }
 
+
+
 function movePiece(event) {
     if (!selectedPiece) return;
 
@@ -70,31 +72,36 @@ function movePiece(event) {
     const targetCell = event.target.closest('.cell');
     const [targetRow, targetCol] = targetCell.id.split('-').map(Number);
 
-    // Check if there's a piece on the target cell
+    // Identify the target piece (if any)
     const targetPiece = boardState[targetRow][targetCol];
+
+    // If attacking, remove the target piece
     if (targetPiece && targetPiece.color !== selectedPiece.color) {
-        console.log(`Attackee removed: ${targetPiece.icon}`);
-        targetCell.innerHTML = ''; // Clear the target cell
-        boardState[targetRow][targetCol] = null; // Remove the piece from the board state
+        console.log(`Removing attacked piece: ${targetPiece.icon}`);
+        targetCell.innerHTML = ''; // Clear the target cell visually
+        boardState[targetRow][targetCol] = null; // Remove the attacked piece from board state
     }
 
-    // Move the selected piece to the new location
+    // Clear the old position of the selected piece
     const oldCell = document.getElementById(`${selectedPiece.row}-${selectedPiece.col}`);
-    oldCell.innerHTML = ''; // Clear the selected piece from the old cell
-
+    oldCell.innerHTML = ''; // Clear the old cell visually
     boardState[selectedPiece.row][selectedPiece.col] = null; // Clear the state of the old cell
+
+    // Move the selected piece to the new position
     selectedPiece.row = targetRow;
     selectedPiece.col = targetCol;
     boardState[targetRow][targetCol] = selectedPiece; // Update the state of the new cell
+    targetCell.innerHTML = selectedPiece.icon; // Update the target cell visually
 
-    targetCell.innerHTML = selectedPiece.icon; // Place the piece in the new cell
-
+    // Clear highlights and reset selection
     clearHighlights();
     selectedPiece = null;
 
     // Reinitialize the event listeners for all pieces
     reinitializeEventListeners();
-    updatePieceInfo(selectedPiece, 'selected'); // Update selected piece info
+
+    // Update piece info (for debugging or UI updates)
+    updatePieceInfo(selectedPiece, 'selected');
 }
 
 function reinitializeEventListeners() {
@@ -111,34 +118,38 @@ function pieceClickListener(event) {
     const [row, col] = cell.id.split('-').map(Number);
     const piece = boardState[row][col];
 
-    // Add this null check to prevent errors
     if (!piece) return;
 
     if (cell.classList.contains('attack')) {
-        // Log the attacker and the attackee to the console
-        console.log(`Attackee: ${piece.icon}`);
-        console.log(`Attacker: ${selectedPiece.icon}`);
+        const targetPiece = boardState[row][col];
+
+        // console.log(`Attackee: ${targetPiece.icon}`);
+        // console.log(`Attacker: ${selectedPiece.icon}`);
+
+
+        console.log(`Attackee!: ${targetPiece.row}-${targetPiece.col}`);
+        console.log(`Attacker!: ${selectedPiece.row}-${targetPiece.col}`);
+
 
         // Remove the attacked piece
-        cell.innerHTML = ''; // Clear the attacked piece from the cell
-        boardState[row][col] = null; // Remove the piece from the board state
+        cell.innerHTML = '129';
+//        // boardState[row][col] = null;
 
-        // Move the selected piece to the new location
+        // // Move the attacking piece
         const oldCell = document.getElementById(`${selectedPiece.row}-${selectedPiece.col}`);
-        oldCell.innerHTML = ''; // Clear the selected piece from the old cell
+        oldCell.innerHTML = '';
+        boardState[selectedPiece.row][selectedPiece.col] = null;
 
-        boardState[selectedPiece.row][selectedPiece.col] = null; // Clear the state of the old cell
         selectedPiece.row = row;
         selectedPiece.col = col;
-        boardState[row][col] = selectedPiece; // Update the state of the new cell
-
-        cell.innerHTML = selectedPiece.icon; // Place the selected piece in the new cell
+        boardState[row][col] = selectedPiece;
+        cell.innerHTML = selectedPiece.icon;
 
         clearHighlights();
         selectedPiece = null;
 
         reinitializeEventListeners();
-        updatePieceInfo(selectedPiece, 'selected'); // Update selected piece info
+        updatePieceInfo(selectedPiece, 'selected');
         return;
     }
 
@@ -149,10 +160,10 @@ function pieceClickListener(event) {
         clearHighlights();
         selectedPiece = piece;
         highlightMoves(piece.getPossibleMoves(boardState));
-        highlightAttacks(piece.getPossibleAttacks(boardState)); // Highlight attackable cells
+        highlightAttacks(piece.getPossibleAttacks(boardState));
     }
 
-    updatePieceInfo(selectedPiece, 'selected'); // Update selected piece info
+    updatePieceInfo(selectedPiece, 'selected');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
