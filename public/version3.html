@@ -121,91 +121,137 @@
     </table>
 
     <script>
-        let pieces = {}
-        let activeCell = undefined
-        let activePiece = undefined
-        let possibleMoves = undefined
-        let highlighted = []
+let pieces = {};
+let activeCell = undefined;
+let activePiece = undefined;
+let possibleMoves = undefined;
+let highlighted = [];
 
-        function handleCellClick(event) {
-            if (event.target.tagName === 'TD' && event.target.classList.contains('cell')) {
-                const row = event.target.getAttribute('data-row');
-                const col = event.target.getAttribute('data-col');
-                activeCell = event.target.getAttribute('id');
+function handleCellClick(event) {
+    if (event.target.tagName === 'TD' && event.target.classList.contains('cell')) {
+        const row = event.target.getAttribute('data-row');
+        const col = event.target.getAttribute('data-col');
+        activeCell = event.target.getAttribute('id');
 
-                activePiece = event.target.getAttribute('data-piece')
-                if (activePiece !== undefined && activePiece.length > 1) {
-                    document.getElementById("activeCell").innerHTML = "activeCell=" + activeCell + " activePiece=" + activePiece
+        if (highlighted.includes(activeCell) && activePiece !== undefined && activePiece.length > 1) {
+            // Move the piece
+            pieces[activePiece].removeFromPlace();
+            const newLocation = `${row}-${col}`;
+            pieces[activePiece].placePiece(newLocation);
 
-                    removeHighlightFromCells(highlighted)
+            // Reset active state and clear highlights
+            activePiece = undefined;
+            removeHighlightFromCells(highlighted);
+            highlighted = [];
 
-                    possibleMoves = pieces[activePiece].getReachableCells()
-
-                    highlightCells(possibleMoves)
-                } else {
-                    document.getElementById("activeCell").innerHTML = "activeCell=" + activeCell
-                }
+        } else {
+            // Select a piece
+            activePiece = event.target.getAttribute('data-piece');
+            if (activePiece !== undefined && activePiece.length > 1) {
+                document.getElementById("activeCell").innerHTML =
+                    "activeCell=" + activeCell + " activePiece=" + activePiece;
+                removeHighlightFromCells(highlighted);
+                highlighted = []; // Clear previous highlights
+                possibleMoves = pieces[activePiece].getReachableCells();
+                highlightCells(possibleMoves);
+            } else {
+                document.getElementById("activeCell").innerHTML = "activeCell=" + activeCell;
             }
         }
-        document.querySelector('table').addEventListener('click', handleCellClick);
+    } else {
+        console.log("ELSE!");
+    }
+}
 
+document.querySelector('table').addEventListener('click', handleCellClick);
 
-
-        function removeHighlightFromCells(cellIds, highlightClass = "highlight") {
-            cellIds.forEach(cellId => {
-                const cell = document.getElementById(cellId);
-                if (cell) {
-                    cell.classList.remove(highlightClass);
-                } else {
-                    console.warn(`Cell with ID "${cellId}" not found.`);
-                }
-            });
+function removeHighlightFromCells(cellIds, highlightClass = "highlight") {
+    cellIds.forEach(cellId => {
+        const cell = document.getElementById(cellId);
+        if (cell) {
+            cell.classList.remove(highlightClass);
+        } else {
+            console.warn(`Cell with ID "${cellId}" not found.`);
         }
+    });
+}
 
-        function highlightCells(cellIds, highlightClass = "highlight") {
-
-            cellIds.forEach(cellId => {
-                const cell = document.getElementById(cellId);
-                if (cell) {
-                    cell.classList.add(highlightClass);
-                    highlighted.push(cellId)
-                } else {
-                    console.warn(`Cell with ID "${cellId}" not found.`);
-                }
-            });
+function highlightCells(cellIds, highlightClass = "highlight") {
+    cellIds.forEach(cellId => {
+        const cell = document.getElementById(cellId);
+        if (cell) {
+            cell.classList.add(highlightClass);
+            if (!highlighted.includes(cellId)) {
+                highlighted.push(cellId);
+            }
+        } else {
+            console.warn(`Cell with ID "${cellId}" not found.`);
         }
+    });
+}
 
-
-        class Piece {
-            constructor(id, row, col, icon, color, type, recurse) {
-                this.id = id
-                this.row = row
-                this.col = col
-                this.icon = icon
-                this.color = color
-                this.type = type
-                this.recurse = recurse
-                this.cellId = `${row}-${col}`
-                pieces[this.id] = this
-                this.placePiece()
-                this.moves = getPossibleMoves(type)
-            }
-            placePiece() {
-                document.getElementById(this.cellId).innerHTML = this.icon
-                document.getElementById(this.cellId).setAttribute('data-piece', this.id)
-            }
-            getReachableCells() {
-                return calculateMoves(this.row, this.col, this.moves, this.recurse);
-            }
+class Piece {
+    constructor(id, row, col, icon, color, type, recurse) {
+        this.id = id;
+        this.row = row;
+        this.col = col;
+        this.icon = icon;
+        this.type = type;
+        this.recurse = recurse;
+        this.cellId = `${row}-${col}`;
+        if (!window.pieces) {
+            window.pieces = {};
         }
-        new Piece("r1", 0, 0, "R", "black", "rook", 8)
-        new Piece("n1", 0, 1, "N", "black", "knight", 1)
+        pieces[this.id] = this;
+        this.placePiece(this.cellId);
+        this.moves = getPossibleMoves(type);
+    }
+
+    placePiece(newLocation) {
+        const [newRow, newCol] = newLocation.split('-').map(Number);
+        this.row = newRow;
+        this.col = newCol;
+        this.cellId = newLocation;
+
+        const cell = document.getElementById(this.cellId);
+        if (cell) {
+            cell.innerHTML = this.icon; // Place the piece icon
+            cell.setAttribute('data-piece', this.id); // Update data-piece attribute
+        } else {
+            console.error(`Cell with ID "${this.cellId}" not found.`);
+        }
+    }
+
+    removeFromPlace() {
+        const cell = document.getElementById(this.cellId);
+        if (cell) {
+            cell.innerHTML = ""; // Clear the cell's content
+            cell.removeAttribute('data-piece'); // Remove the data attribute
+        } else {
+            console.error(`Cell with ID "${this.cellId}" not found.`);
+        }
+    }
+
+    getReachableCells() {
+        return calculateMoves(this.row, this.col, this.moves, this.recurse);
+    }
+}
+
+// Example Pieces
+new Piece("r1", 0, 0, "R", "black", "rook", 8);
+new Piece("n1", 0, 1, "N", "black", "knight", 1);
+new Piece("b1", 0, 2, "B", "black", "bishop", 8);
+new Piece("bq", 0, 3, "Q", "black", "queen", 8);
+new Piece("bk", 0, 4, "K", "black", "king", 1);
+new Piece("b2", 0, 5, "B", "black", "bishop", 8);
+new Piece("n2", 0, 6, "N", "black", "knight", 1);
+new Piece("r2", 0, 7, "R", "black", "rook", 8);
+
+function poke() {
+    alert("piece=" + activePiece + "\ncell=" + activeCell);
+}
     </script>
     <button onclick="poke()">poke</button>
-
-
-
-
 </body>
 
 </html>
