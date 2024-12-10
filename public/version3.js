@@ -181,7 +181,6 @@ class Piece {
         this.row = newRow;
         this.col = newCol;
         this.cellId = newLocation;
-
         const cell = document.getElementById(this.cellId);
         if (cell) {
             cell.innerHTML = this.icon; // Place the piece icon
