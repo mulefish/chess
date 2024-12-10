@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Version 3</title>
+    <style>
+        .cell {
+            width: 50px;
+            height: 50px;
+            font-size: 40px;
+            text-align: center;
+            user-select: none; /* Prevent text selection */
+
+        }
+
+        .cream {
+            background-color: tan;
+        }
+
+        .green {
+            background-color: lightgreen;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="activeCell">&nbsp;</div>
+    <table border="1">
+        <tr>
+            <td class="cell cream" id="0-0" data-piece="" data-row="0" data-col="0"></td>
+            <td class="cell green" id="0-1" data-piece="" data-row="0" data-col="1"></td>
+            <td class="cell cream" id="0-2" data-piece="" data-row="0" data-col="2"></td>
+            <td class="cell green" id="0-3" data-piece="" data-row="0" data-col="3"></td>
+            <td class="cell cream" id="0-4" data-piece="" data-row="0" data-col="4"></td>
+            <td class="cell green" id="0-5" data-piece="" data-row="0" data-col="5"></td>
+            <td class="cell cream" id="0-6" data-piece="" data-row="0" data-col="6"></td>
+            <td class="cell green" id="0-7" data-piece="" data-row="0" data-col="7"></td>
+        </tr>
+        <tr>
+            <td class="cell green" id="1-0" data-piece="" data-row="1" data-col="0"></td>
+            <td class="cell cream" id="1-1" data-piece="" data-row="1" data-col="1"></td>
+            <td class="cell green" id="1-2" data-piece="" data-row="1" data-col="2"></td>
+            <td class="cell cream" id="1-3" data-piece="" data-row="1" data-col="3"></td>
+            <td class="cell green" id="1-4" data-piece="" data-row="1" data-col="4"></td>
+            <td class="cell cream" id="1-5" data-piece="" data-row="1" data-col="5"></td>
+            <td class="cell green" id="1-6" data-piece="" data-row="1" data-col="6"></td>
+            <td class="cell cream" id="1-7" data-piece="" data-row="1" data-col="7"></td>
+        </tr>
+        <tr>
+            <td class="cell cream" id="2-0" data-piece="" data-row="2" data-col="0"></td>
+            <td class="cell green" id="2-1" data-piece="" data-row="2" data-col="1"></td>
+            <td class="cell cream" id="2-2" data-piece="" data-row="2" data-col="2"></td>
+            <td class="cell green" id="2-3" data-piece="" data-row="2" data-col="3"></td>
+            <td class="cell cream" id="2-4" data-piece="" data-row="2" data-col="4"></td>
+            <td class="cell green" id="2-5" data-piece="" data-row="2" data-col="5"></td>
+            <td class="cell cream" id="2-6" data-piece="" data-row="2" data-col="6"></td>
+            <td class="cell green" id="2-7" data-piece="" data-row="2" data-col="7"></td>
+        </tr>
+        <tr>
+            <td class="cell green" id="3-0" data-piece="" data-row="3" data-col="0"></td>
+            <td class="cell cream" id="3-1" data-piece="" data-row="3" data-col="1"></td>
+            <td class="cell green" id="3-2" data-piece="" data-row="3" data-col="2"></td>
+            <td class="cell cream" id="3-3" data-piece="" data-row="3" data-col="3"></td>
+            <td class="cell green" id="3-4" data-piece="" data-row="3" data-col="4"></td>
+            <td class="cell cream" id="3-5" data-piece="" data-row="3" data-col="5"></td>
+            <td class="cell green" id="3-6" data-piece="" data-row="3" data-col="6"></td>
+            <td class="cell cream" id="3-7" data-piece="" data-row="3" data-col="7"></td>
+        </tr>
+        <tr>
+            <td class="cell cream" id="4-0" data-piece="" data-row="4" data-col="0"></td>
+            <td class="cell green" id="4-1" data-piece="" data-row="4" data-col="1"></td>
+            <td class="cell cream" id="4-2" data-piece="" data-row="4" data-col="2"></td>
+            <td class="cell green" id="4-3" data-piece="" data-row="4" data-col="3"></td>
+            <td class="cell cream" id="4-4" data-piece="" data-row="4" data-col="4"></td>
+            <td class="cell green" id="4-5" data-piece="" data-row="4" data-col="5"></td>
+            <td class="cell cream" id="4-6" data-piece="" data-row="4" data-col="6"></td>
+            <td class="cell green" id="4-7" data-piece="" data-row="4" data-col="7"></td>
+        </tr>
+        <tr>
+            <td class="cell green" id="5-0" data-piece="" data-row="5" data-col="0"></td>
+            <td class="cell cream" id="5-1" data-piece="" data-row="5" data-col="1"></td>
+            <td class="cell green" id="5-2" data-piece="" data-row="5" data-col="2"></td>
+            <td class="cell cream" id="5-3" data-piece="" data-row="5" data-col="3"></td>
+            <td class="cell green" id="5-4" data-piece="" data-row="5" data-col="4"></td>
+            <td class="cell cream" id="5-5" data-piece="" data-row="5" data-col="5"></td>
+            <td class="cell green" id="5-6" data-piece="" data-row="5" data-col="6"></td>
+            <td class="cell cream" id="5-7" data-piece="" data-row="5" data-col="7"></td>
+        </tr>
+        <tr>
+            <td class="cell cream" id="6-0" data-piece="" data-row="6" data-col="0"></td>
+            <td class="cell green" id="6-1" data-piece="" data-row="6" data-col="1"></td>
+            <td class="cell cream" id="6-2" data-piece="" data-row="6" data-col="2"></td>
+            <td class="cell green" id="6-3" data-piece="" data-row="6" data-col="3"></td>
+            <td class="cell cream" id="6-4" data-piece="" data-row="6" data-col="4"></td>
+            <td class="cell green" id="6-5" data-piece="" data-row="6" data-col="5"></td>
+            <td class="cell cream" id="6-6" data-piece="" data-row="6" data-col="6"></td>
+            <td class="cell green" id="6-7" data-piece="" data-row="6" data-col="7"></td>
+        </tr>
+        <tr>
+            <td class="cell green" id="7-0" data-piece="" data-row="7" data-col="0"></td>
+            <td class="cell cream" id="7-1" data-piece="" data-row="7" data-col="1"></td>
+            <td class="cell green" id="7-2" data-piece="" data-row="7" data-col="2"></td>
+            <td class="cell cream" id="7-3" data-piece="" data-row="7" data-col="3"></td>
+            <td class="cell green" id="7-4" data-piece="" data-row="7" data-col="4"></td>
+            <td class="cell cream" id="7-5" data-piece="" data-row="7" data-col="5"></td>
+            <td class="cell green" id="7-6" data-piece="" data-row="7" data-col="6"></td>
+            <td class="cell cream" id="7-7" data-piece="" data-row="7" data-col="7"></td>
+        </tr>
+    </table>
+
+    <script>
+        let pieces = {}
+        let activeCell = undefined
+        function handleCellClick(event) {
+            // Check if the clicked element is a table cell
+            if (event.target.tagName === 'TD' && event.target.classList.contains('cell')) {
+                const row = event.target.getAttribute('data-row');
+                const col = event.target.getAttribute('data-col');
+                activeCell = event.target.getAttribute('id');
+                document.getElementById("activeCell").innerHTML = activeCell + " piece=" + 
+            }
+        }
+        document.querySelector('table').addEventListener('click', handleCellClick);
+
+        class Piece { 
+            constructor(id, row, col, icon) {
+                this.row = row 
+                this.col = col 
+                this.icon = icon
+                this.cellId = `${row}-${col}`
+                pieces[this.id]=this
+                this.placePiece()
+            }
+            placePiece() {
+                document.getElementById(this.cellId).innerHTML = this.icon
+                document.getElementById(this.cellId).setAttribute('data-piece') = this.id
+            }
+        }
+        new Piece("r1", 0,0,"R")
+    </script>
+    <button onclick="poke()">poke</button>
+
+
+
+
+    <script src="version3.js"></script>
+</body>
+
+</html>

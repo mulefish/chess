@@ -1,5 +1,6 @@
 const boardState = Array(8).fill(null).map(() => Array(8).fill(null));
 const pieces = getPieces();
+let possibleAttacks = [] 
 
 pieces.forEach(piece => {
     boardState[piece.row][piece.col] = piece;
@@ -62,8 +63,6 @@ function clearHighlights() {
     });
 }
 
-
-
 function movePiece(event) {
     if (!selectedPiece) return;
 
@@ -72,14 +71,20 @@ function movePiece(event) {
     const targetCell = event.target.closest('.cell');
     const [targetRow, targetCol] = targetCell.id.split('-').map(Number);
 
-    // Identify the target piece (if any)
-    const targetPiece = boardState[targetRow][targetCol];
+    // Check if the target cell is in the list of possible attacks
+    const isAttack = possibleAttacks.some(([row, col]) => row === targetRow && col === targetCol);
 
-    // If attacking, remove the target piece
-    if (targetPiece && targetPiece.color !== selectedPiece.color) {
-        console.log(`Removing attacked piece: ${targetPiece.icon}`);
-        targetCell.innerHTML = ''; // Clear the target cell visually
-        boardState[targetRow][targetCol] = null; // Remove the attacked piece from board state
+    if (isAttack) {
+        // If it's an attack, ensure the target piece is correctly identified and removed
+        const targetPiece = boardState[targetRow][targetCol];
+        if (targetPiece) {
+            console.log(`Attacking piece: ${selectedPiece.icon} at ${selectedPiece.row}-${selectedPiece.col}`);
+            console.log(`Removing attacked piece: ${targetPiece.icon} at ${targetRow}-${targetCol}`);
+            targetCell.innerHTML = ''; // Clear the attacked piece visually
+            boardState[targetRow][targetCol] = null; // Remove the attacked piece from the board state
+        }
+    } else {
+        console.log(`No attack: Moving to ${targetRow}-${targetCol}`);
     }
 
     // Clear the old position of the selected piece
@@ -103,6 +108,7 @@ function movePiece(event) {
     // Update piece info (for debugging or UI updates)
     updatePieceInfo(selectedPiece, 'selected');
 }
+
 
 function reinitializeEventListeners() {
     pieces.forEach(piece => {
@@ -160,7 +166,9 @@ function pieceClickListener(event) {
         clearHighlights();
         selectedPiece = piece;
         highlightMoves(piece.getPossibleMoves(boardState));
-        highlightAttacks(piece.getPossibleAttacks(boardState));
+        possibleAttacks = piece.getPossibleAttacks(boardState )
+        highlightAttacks(possibleAttacks);
+        console.log( "possibleAttacks=" + JSON.stringify( possibleAttacks) ) 
     }
 
     updatePieceInfo(selectedPiece, 'selected');

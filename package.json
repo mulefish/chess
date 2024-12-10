@@ -1,0 +1,20 @@
+{
+  "name": "chess",
+  "version": "1.0.0",
+  "description": "different reasons : Python - The python community is top notch and we ask and answer fun ML questions and jupyter is wonderful. Javascript - Client side code is hard to beat for snappy UX. Node - Sloppy stuff - and slow - but it sure is easy to stand something up. Java - java is the anti-node: a pain to set up, but once it is going it is bulletproof and wicked fast.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+  "start": "node app.js",
+  "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
