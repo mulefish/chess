@@ -23,7 +23,7 @@ function getPossibleMoves(type) {
         case 'pawnw':
             moves = [[-1, 0]]
             break;
-    
+
     }
     return moves;
 }
@@ -72,6 +72,71 @@ function calculateMoves(row, col, moves, recurse) {
     return accumulator;
 }
 
+
+
+function calculateAttacksForPawns(row, col, moves, recurse, color) {
+    let accumulator = []
+    if (color === "black") {
+        const maybe1R = row + 1
+        const maybe1C = col - 1
+        if (maybe1R >= 0 && maybe1C < 8) {
+            const id = `${maybe1R}-${maybe1C}`
+            const pId = document.getElementById(id).getAttribute('data-piece');
+            if (pId !== undefined && pId !== "") {
+                if (pieces[pId].color === "white") {
+                    accumulator.push(id);
+                }
+            }
+        }
+
+        const maybe2R = row + 1
+        const maybe2C = col + 1
+        if (maybe2R >= 0 && maybe2C < 8) {
+            const id = `${maybe2R}-${maybe2C}`
+            const pId = document.getElementById(id).getAttribute('data-piece');
+            if (pId !== undefined && pId !== "") {
+                if (pieces[pId].color === "white") {
+                    accumulator.push(id);
+                }
+            }
+        }
+
+
+    } else if ( color === "white") {
+            const maybe1R = row - 1
+            const maybe1C = col - 1
+            if (maybe1R >= 0 && maybe1C < 8) {
+                const id = `${maybe1R}-${maybe1C}`
+                const pId = document.getElementById(id).getAttribute('data-piece');
+                if (pId !== undefined && pId !== "") {
+                    if (pieces[pId].color === "black") {
+                        accumulator.push(id);
+                    }
+                }
+            }
+    
+            const maybe2R = row - 1
+            const maybe2C = col + 1
+            if (maybe2R >= 0 && maybe2C < 8) {
+                const id = `${maybe2R}-${maybe2C}`
+                const pId = document.getElementById(id).getAttribute('data-piece');
+                if (pId !== undefined && pId !== "") {
+                    if (pieces[pId].color === "black") {
+                        accumulator.push(id);
+                    }
+                }
+            }
+    
+    
+        }
+    
+
+
+    return accumulator;
+}
+
+
+
 function calculateAttacks(row, col, moves, recurse, color) {
     function checkit(r1, c1, r2, c2, limit, accumulator) {
         if (limit < 1) {
@@ -89,12 +154,12 @@ function calculateAttacks(row, col, moves, recurse, color) {
                 } else {
                     // Enemy piece found; add to accumulator and stop further exploration in this direction
 
-                    if ( color === "white") {
-                        if ( pieces[potentialPiece].color === "black") {
+                    if (color === "white") {
+                        if (pieces[potentialPiece].color === "black") {
                             accumulator.push(id);
                         }
-                    } else if ( color === "black") {
-                        if ( pieces[potentialPiece].color === "white") {
+                    } else if (color === "black") {
+                        if (pieces[potentialPiece].color === "white") {
                             accumulator.push(id);
                         }
                     }
@@ -137,7 +202,7 @@ function selectingPiece() {
             "activeCell=" + activeCell + " activePiece=" + activePiece;
         removeHighlightFromCells(highlighted);
         highlighted = []; // Clear previous highlights
-        highlightedAttacks = []; 
+        highlightedAttacks = [];
         possibleMoves = pieces[activePiece].getReachableCells();
         possibleAttacks = pieces[activePiece].getAttackableCells();
         highlightCells(possibleMoves);
@@ -155,7 +220,7 @@ class Piece {
         this.row = row;
         this.col = col;
         this.icon = icon;
-        this.color = color 
+        this.color = color
         this.type = type;
         this.recurse = recurse;
         this.moveCount = -1
@@ -171,9 +236,8 @@ class Piece {
 
     placePiece(newLocation) {
         this.moveCount++
-        yellow("placePiece=" + newLocation + "  moveCOunt " + this.moveCount + " id=" + this.id ) 
-        if ( this.type === "pawnb" || this.type === "pawnw") {
-            if ( this.moveCount === 1 ) {
+        if (this.type === "pawnb" || this.type === "pawnw") {
+            if (this.moveCount === 1) {
                 this.recurse = 1
             }
         }
@@ -203,8 +267,12 @@ class Piece {
     getReachableCells() {
         return calculateMoves(this.row, this.col, this.moves, this.recurse);
     }
-    getAttackableCells() { 
-        return calculateAttacks(this.row, this.col, this.moves, this.recurse, this.color);
+    getAttackableCells() {
+        if (this.type !== "pawnb" && this.type !== "pawnw") {
+            return calculateAttacks(this.row, this.col, this.moves, this.recurse, this.color);
+        } else {
+            return calculateAttacksForPawns(this.row, this.col, this.moves, this.recurse, this.color);
+        }
     }
 }
 
