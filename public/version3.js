@@ -66,62 +66,6 @@ function calculateMoves(row, col, moves, recurse) {
     return accumulator;
 }
 
-
-// function calculateAttacksForPawns(row, col, moves, recurse, color) {
-//     const accumulator = [];
-//     const direction = (color === "black") ? 1 : -1; // Black moves down, white moves up
-
-//     // Check diagonal left
-//     const leftId = `${row + direction}-${col - 1}`;
-//     const leftPiece = document.getElementById(leftId)?.getAttribute('data-piece');
-//     if (leftPiece && pieces[leftPiece].color !== color) {
-//         accumulator.push(leftId);
-//     }
-
-//     // Check diagonal right
-//     const rightId = `${row + direction}-${col + 1}`;
-//     const rightPiece = document.getElementById(rightId)?.getAttribute('data-piece');
-//     if (rightPiece && pieces[rightPiece].color !== color) {
-//         accumulator.push(rightId);
-//     }
-
-//     // En passant
-//     if (lastMove && lastMove.piece.type === "pawnb" || lastMove.piece.type === "pawnw") {
-//         const lastMoveDirection = (lastMove.piece.color === "black") ? -1 : 1;
-//         if (Math.abs(lastMove.from.split('-')[0] - lastMove.to.split('-')[0]) === 2) {
-//             if (lastMove.piece.row === row && Math.abs(lastMove.piece.col - col) === 1) {
-//                 const enPassantId = `${row + direction}-${lastMove.piece.col}`;
-//                 accumulator.push(enPassantId);
-//             }
-//         }
-//     }
-
-//     return accumulator;
-// }
-
-// function calculateAttacksForPawns(row, col, moves, recurse, color) {
-//     const accumulator = [];
-//     const direction = color === black ? 1 : -1; // Black moves down, White moves up
-//     const opponentColor = color === black ? white : black;
-
-//     // Helper function to check and add valid attack positions
-//     const addAttackIfValid = (row, col) => {
-//         if (row >= 0 && row < 8 && col >= 0 && col < 8) {
-//             const id = `${row}-${col}`;
-//             const pieceId = document.getElementById(id).getAttribute('data-piece');
-//             if (pieceId && pieces[pieceId].color === opponentColor) {
-//                 accumulator.push(id);
-//             }
-//         }
-//     };
-
-//     // Check diagonal left and right attacks
-//     addAttackIfValid(row + direction, col - 1);
-//     addAttackIfValid(row + direction, col + 1);
-
-//     return accumulator;
-// }
-
 function calculateAttacksForPawns(row, col, moves, recurse, color) {
     const accumulator = [];
     const direction = (color === "black") ? 1 : -1; // Black moves down, white moves up
@@ -210,16 +154,21 @@ function calculateAttacks(row, col, moves, recurse, color) {
 
 function placingPiece(row, col) {
     // Check if the move is an en passant capture
+    blue("placingPieces")
     if (lastMove && activePiece.type === "pawnw" || activePiece.type === "pawnb") {
+ yellow("a ")
         const direction = (activePiece.color === "black") ? -1 : 1;
         if (Math.abs(lastMove.from.split('-')[0] - lastMove.to.split('-')[0]) === 2) {
+            yellow("b ")
             if (lastMove.piece.row === row - direction && lastMove.piece.col === col) {
+                yellow("c ")
+
                 // Remove the captured pawn
                 pieces[lastMove.piece.id].removeFromPlace();
             }
         }
     }
-
+    yellow("d ")
     // Move the piece
     pieces[activePiece].removeFromPlace();
     const newLocation = `${row}-${col}`;
@@ -251,7 +200,6 @@ function selectingPiece() {
     }
 }
 
-
 class Piece {
     constructor(id, row, col, icon, color, type, recurse) {
         this.id = id;
@@ -274,7 +222,6 @@ class Piece {
         this.moves = getPossibleMoves(type);
     }
 
-
     placePiece(newLocation) {
         this.moveCount++;
         this.lastRow = this.row;
@@ -288,7 +235,6 @@ class Piece {
         this.row = newRow;
         this.col = newCol;
     
-        // Update last move
         lastMove = {
             piece: this,
             from: `${this.lastRow}-${this.lastCol}`,
@@ -306,7 +252,6 @@ class Piece {
         }
     }
     
-
     removeFromPlace() { 
         const cell = document.getElementById(this.cellId);
         if (cell) {
@@ -320,26 +265,9 @@ class Piece {
         }
     }
 
-    // getReachableCells() {
-    //     if (this.type === "pawnb" && this.type === "pawnw") {
-    //         return calculateMovesForPawns(this.row, this.col, this.moves, this.recurse);
-    //     } else {
-    //         return calculateMoves(this.row, this.col, this.moves, this.recurse);
-    //     }
-    // }
-
     getReachableCells() {
             return calculateMoves(this.row, this.col, this.moves, this.recurse);
     }
-
-
-    // getAttackableCells() {
-    //     if (this.type !== "pawnb" && this.type !== "pawnw") {
-    //         return calculateAttacks(this.row, this.col, this.moves, this.recurse, this.color);
-    //     } else {
-    //         return calculateAttacksForPawns(this.row, this.col, this.moves, this.recurse, this.color);
-    //     }
-    // }
 
     getAttackableCells() {
         if (this.type === "pawnb" || this.type === "pawnw") {
