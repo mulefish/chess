@@ -17,6 +17,13 @@ function getPossibleMoves(type) {
         case 'king':
             moves = [[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]
             break;
+        case 'pawnb':
+            moves = [[1, 0]]
+            break;
+        case 'pawnw':
+            moves = [[-1, 0]]
+            break;
+    
     }
     return moves;
 }
@@ -151,7 +158,9 @@ class Piece {
         this.color = color 
         this.type = type;
         this.recurse = recurse;
+        this.moveCount = -1
         this.cellId = `${row}-${col}`;
+
         if (!window.pieces) {
             window.pieces = {};
         }
@@ -161,6 +170,13 @@ class Piece {
     }
 
     placePiece(newLocation) {
+        this.moveCount++
+        yellow("placePiece=" + newLocation + "  moveCOunt " + this.moveCount + " id=" + this.id ) 
+        if ( this.type === "pawnb" || this.type === "pawnw") {
+            if ( this.moveCount === 1 ) {
+                this.recurse = 1
+            }
+        }
         const [newRow, newCol] = newLocation.split('-').map(Number);
         this.row = newRow;
         this.col = newCol;

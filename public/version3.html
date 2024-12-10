@@ -148,10 +148,9 @@
 
 
                 if (highlightedAttacks.includes(activeCell)) {
-                    const attackedPiece =event.target.getAttribute('data-piece');
+                    const attackedPiece = event.target.getAttribute('data-piece');
 
-                    // yellow("handleCellClick activeCell=" + activeCell + "   activePiece " + activePiece + " attacked: " + attackedPiece ) 
-                    
+
                     placeAttackingPiece(row, col, activePiece, attackedPiece)
                 } else {
                     if (highlighted.includes(activeCell) && activePiece !== undefined && activePiece.length > 1) {
@@ -166,7 +165,6 @@
         document.querySelector('table').addEventListener('click', handleCellClick);
 
         function placingPiece(row, col) {
-            blue("placingPiece")
             // Move the piece
             pieces[activePiece].removeFromPlace();
             const newLocation = `${row}-${col}`;
@@ -181,63 +179,49 @@
             highlightedAttacks = [];
         }
 
-        // function placeAttackingPiece( row, col, attackingPieceKey, attackedPieceKey) {
-        //     const fromCell = pieces[attackingPieceKey].cellId 
-        //     const toCell = pieces[attackedPieceKey].cellId 
-
-
-
-        //     blue("placeAttackingPiece  row=" + row +" col=" + col + " apk=" + attackingPieceKey + " sareteiur=" + attackedPieceKey + " from=" + fromCell + " toCell=" + toCell )
-
-
-
-        // }
-        
         function placeAttackingPiece(row, col, attackingPieceKey, attackedPieceKey) {
-    // Identify the fromCell and toCell
-    const fromCell = pieces[attackingPieceKey].cellId;
-    const toCell = `${row}-${col}`; // Target cell determined from row and col
+            // Identify the fromCell and toCell
+            const fromCell = pieces[attackingPieceKey].cellId;
+            const toCell = `${row}-${col}`; // Target cell determined from row and col
 
-    // Remove the attacked piece from the toCell
-    const attackedCell = document.getElementById(toCell);
-    if (attackedCell) {
-        attackedCell.innerHTML = ""; // Clear the target cell
-        attackedCell.removeAttribute('data-piece'); // Remove data-piece attribute
-        if (attackedPieceKey) {
-            console.log(`Removing attacked piece "${attackedPieceKey}" from "${toCell}"`);
+            // Remove the attacked piece from the toCell
+            const attackedCell = document.getElementById(toCell);
+            if (attackedCell) {
+                attackedCell.innerHTML = ""; // Clear the target cell
+                attackedCell.removeAttribute('data-piece'); // Remove data-piece attribute
+                if (attackedPieceKey) {
+                    console.log(`Removing attacked piece "${attackedPieceKey}" from "${toCell}"`);
 
-            delete pieces[attackedPieceKey]; // Remove the attacked piece from the pieces object
+                    delete pieces[attackedPieceKey]; // Remove the attacked piece from the pieces object
+                }
+                console.log(`Highlights cleared. Ready for next action.`);
+            } else {
+                console.warn(`Target cell "${toCell}" not found.`);
+            }
+
+            // Remove the attacking piece from the fromCell
+            const attackingCell = document.getElementById(fromCell);
+            if (attackingCell) {
+                attackingCell.innerHTML = ""; // Clear the current cell
+                attackingCell.removeAttribute('data-piece'); // Remove data-piece attribute
+            } else {
+                console.warn(`From cell "${fromCell}" not found.`);
+            }
+
+            // Place the attacking piece in the toCell
+            pieces[attackingPieceKey].placePiece(toCell);
+
+            // Reset active state and clear highlights
+            activePiece = undefined;
+            removeHighlightFromCells(highlighted);
+            removeHighlightAttackFromCells(highlightedAttacks);
+
+            highlighted = [];
+            highlightedAttacks = [];
         }
-        console.log(`Highlights cleared. Ready for next action.`);
-    } else {
-        console.warn(`Target cell "${toCell}" not found.`);
-    }
-
-    // Remove the attacking piece from the fromCell
-    const attackingCell = document.getElementById(fromCell);
-    if (attackingCell) {
-        attackingCell.innerHTML = ""; // Clear the current cell
-        attackingCell.removeAttribute('data-piece'); // Remove data-piece attribute
-    } else {
-        console.warn(`From cell "${fromCell}" not found.`);
-    }
-
-    // Place the attacking piece in the toCell
-    pieces[attackingPieceKey].placePiece(toCell);
-
-    // Reset active state and clear highlights
-    activePiece = undefined;
-    removeHighlightFromCells(highlighted);
-    removeHighlightAttackFromCells(highlightedAttacks);
-
-    highlighted = [];
-    highlightedAttacks = [];
-}
 
 
         function selectingPiece() {
-            yellow("selectingPiece")
-            // Select a piece
             activePiece = event.target.getAttribute('data-piece');
             if (activePiece !== undefined && activePiece.length > 1) {
                 document.getElementById("activeCell").innerHTML =
@@ -261,7 +245,6 @@
         }
 
         function removeHighlightFromCells(cellIds, highlightClass = "highlight") {
-            yellow("removeHighlightFromCells")
             cellIds.forEach(cellId => {
                 const cell = document.getElementById(cellId);
                 if (cell) {
@@ -273,7 +256,6 @@
         }
 
         function removeHighlightAttackFromCells(cellIds, highlightClass = "highlightAttack") {
-            yellow("removeHighlightAttackFromCells")
             cellIds.forEach(cellId => {
                 const cell = document.getElementById(cellId);
                 if (cell) {
@@ -285,7 +267,6 @@
         }
 
         function highlightCells(cellIds, highlightClass = "highlight") {
-            yellow("highlightCells")
             cellIds.forEach(cellId => {
                 const cell = document.getElementById(cellId);
                 if (cell) {
@@ -300,7 +281,6 @@
         }
 
         function highlightAttackableCells(cellIds, highlightClass = "highlightAttack") {
-            blue("highlightAttackableCells")
             cellIds.forEach(cellId => {
                 const cell = document.getElementById(cellId);
                 if (cell) {
@@ -324,6 +304,10 @@
         new Piece("bb2", 0, 5, "♝", "black", "bishop", 8);
         new Piece("bn2", 0, 6, "♞", "black", "knight", 1);
         new Piece("br2", 0, 7, "♜", "black", "rook", 8);
+        new Piece("bpawn1", 1, 5, "♟", "black", "pawnb", 2);
+        new Piece("bpawn2", 1, 6, "♟", "black", "pawnb", 2);
+        new Piece("bpawn3", 1, 7, "♟", "black", "pawnb", 2);
+
 
         new Piece("wr1", 7, 0, "♖", "white", "rook", 8);
         new Piece("wn1", 7, 1, "♘", "white", "knight", 1);
@@ -333,6 +317,9 @@
         new Piece("wb2", 7, 5, "♗", "white", "bishop", 8);
         new Piece("wn2", 7, 6, "♘", "white", "knight", 1);
         new Piece("wr2", 7, 7, "♖", "white", "rook", 8);
+        new Piece("wpawn1", 6, 5, "♙", "white", "pawnw", 2);
+        new Piece("wpawn2", 6, 6, "♙", "white", "pawnw", 2);
+        new Piece("wpawn3", 6, 7, "♙", "white", "pawnw", 2);
 
 
         function poke() {
