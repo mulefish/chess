@@ -103,6 +103,8 @@ function calculateAttacksForPawns(row, col, moves, recurse, color) {
             const enPassantCol = lastMoveCol; // Target column for en passant capture
             const enPassantId = `${enPassantRow}-${enPassantCol}`;
             accumulator.push(enPassantId);
+            enpassant.push(enPassantId)
+            yellow("enpassant: " +  JSON.stringify( enpassant ))
         }
     }
 
@@ -228,9 +230,48 @@ class Piece {
             this.recurse = 1
         }
 
+
         const [newRow, newCol] = newLocation.split('-').map(Number);
         this.row = newRow;
         this.col = newCol;
+
+
+        if ( ( this.type === "pawnb" || this.type === "pawnw" ) && this.moveCount > 1 ) {
+            const eId = `${this.row}-${this.col}`            
+            if ( enpassant.includes(eId) ) { 
+                blue("YAY!!  " + eId )
+                if ( this.color === white ) {
+                    const cellToZap = "3-" + this.col
+                    delete pieces[cellToZap]
+                    const cell = document.getElementById(cellToZap);
+                    if (cell) {
+                        cell.innerHTML = ""; // Clear the cell's content
+                        const something =  cell.removeAttribute('data-piece')
+                        if ( something !== undefined ) {
+                            cell.removeAttribute('data-piece'); // Remove the data attribute
+                        }
+                    }
+
+
+                } else if ( this.color === black ) { 
+                    const cellToZap = "4-" + this.col
+                    delete pieces[cellToZap] // 
+                    const cell = document.getElementById(cellToZap);
+                    if (cell) {
+                        cell.innerHTML = ""; // Clear the cell's content
+                        const something =  cell.removeAttribute('data-piece')
+                        if ( something !== undefined ) {
+                            cell.removeAttribute('data-piece'); // Remove the data attribute
+                        }
+                    }
+                }
+                
+            } else {    
+                blue("BOO!! " + eId ) 
+            }
+        }
+
+
     
         // Update last move
         lastMove = {
