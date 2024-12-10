@@ -130,103 +130,218 @@
     </table>
 
     <script>
-        let pieces = {};
-        let activeCell = undefined;
-        let activePiece = undefined;
-        let possibleMoves = undefined;
-        let highlighted = [];
-        let possibleAttacks = undefined;
+            // let pieces = {};
+            // let activeCell = undefined;
+            // let activePiece = undefined;
+            // let possibleMoves = undefined;
+            // let highlighted = [];
+            // let possibleAttacks = undefined;
 
-        function handleCellClick(event) {
-            if (event.target.tagName === 'TD' && event.target.classList.contains('cell')) {
-                const row = event.target.getAttribute('data-row');
-                const col = event.target.getAttribute('data-col');
-                activeCell = event.target.getAttribute('id');
+            // function handleCellClick(event) {
+            //     if (event.target.tagName === 'TD' && event.target.classList.contains('cell')) {
+            //         const row = event.target.getAttribute('data-row');
+            //         const col = event.target.getAttribute('data-col');
+            //         activeCell = event.target.getAttribute('id');
 
-                if (highlighted.includes(activeCell) && activePiece !== undefined && activePiece.length > 1) {
-                    placingPiece(row, col)
-                } else {
-                    selectingPiece()
-                }
+            //         if (highlighted.includes(activeCell) && activePiece !== undefined && activePiece.length > 1) {
+            //             placingPiece(row, col)
+            //         } else {
+            //             selectingPiece()
+            //         }
+            //     }
+            // }
+
+            // document.querySelector('table').addEventListener('click', handleCellClick);
+
+            // function removeHighlightFromCells(cellIds, highlightClass = "highlight") {
+            //     cellIds.forEach(cellId => {
+            //         const cell = document.getElementById(cellId);
+            //         if (cell) {
+            //             cell.classList.remove(highlightClass);
+            //         } else {
+            //             console.warn(`Cell with ID "${cellId}" not found.`);
+            //         }
+            //     });
+            // }
+
+            // function removeHighlightAttackFromCells(cellIds, highlightClass = "highlight") {
+
+            //     cellIds.forEach(cellId => {
+            //         const cell = document.getElementById(cellId);
+            //         if (cell) {
+            //             cell.classList.remove(highlightClass);
+            //         } else {
+            //             console.warn(`Cell with ID "${cellId}" not found.`);
+            //         }
+            //     });
+
+            // }
+
+            // function highlightCells(cellIds, highlightClass = "highlight") {
+            //     cellIds.forEach(cellId => {
+            //         const cell = document.getElementById(cellId);
+            //         if (cell) {
+            //             cell.classList.add(highlightClass);
+            //             if (!highlighted.includes(cellId)) {
+            //                 highlighted.push(cellId);
+            //             }
+            //         } else {
+            //             console.warn(`Cell with ID "${cellId}" not found.`);
+            //         }
+            //     });
+            // }
+            // function highlightAttackableCells(cellIds, highlightClass = "highlightAttack") {
+            //     cellIds.forEach(cellId => {
+            //         const cell = document.getElementById(cellId);
+            //         if (cell) {
+            //             cell.classList.add(highlightClass);
+            //             if (!highlighted.includes(cellId)) {
+            //                 highlighted.push(cellId);
+            //             }
+            //         } else {
+            //             console.warn(`Cell with ID "${cellId}" not found.`);
+            //         }
+            //     });
+            // }
+
+
+            let pieces = {};
+let activeCell = undefined;
+let activePiece = undefined;
+let possibleMoves = undefined;
+let possibleAttacks = undefined;
+let highlighted = [];
+let highlightedAttacks = [];
+
+function handleCellClick(event) {
+    if (event.target.tagName === 'TD' && event.target.classList.contains('cell')) {
+        const row = event.target.getAttribute('data-row');
+        const col = event.target.getAttribute('data-col');
+        activeCell = event.target.getAttribute('id');
+
+        if (highlighted.includes(activeCell) && activePiece !== undefined && activePiece.length > 1) {
+            placingPiece(row, col);
+        } else {
+            selectingPiece();
+        }
+    }
+}
+
+document.querySelector('table').addEventListener('click', handleCellClick);
+
+function placingPiece(row, col) {
+    // Move the piece
+    pieces[activePiece].removeFromPlace();
+    const newLocation = `${row}-${col}`;
+    pieces[activePiece].placePiece(newLocation);
+
+    // Reset active state and clear highlights
+    activePiece = undefined;
+    removeHighlightFromCells(highlighted);
+    removeHighlightAttackFromCells(highlightedAttacks);
+
+    highlighted = [];
+    highlightedAttacks = [];
+}
+
+function selectingPiece() {
+    // Select a piece
+    activePiece = event.target.getAttribute('data-piece');
+    if (activePiece !== undefined && activePiece.length > 1) {
+        document.getElementById("activeCell").innerHTML =
+            "activeCell=" + activeCell + " activePiece=" + activePiece;
+
+        // Clear previous highlights
+        removeHighlightFromCells(highlighted);
+        removeHighlightAttackFromCells(highlightedAttacks);
+
+        highlighted = [];
+        highlightedAttacks = [];
+
+        // Highlight moves and attacks
+        possibleMoves = pieces[activePiece].getReachableCells();
+        possibleAttacks = pieces[activePiece].getAttackableCells();
+        highlightCells(possibleMoves);
+        highlightAttackableCells(possibleAttacks);
+    } else {
+        document.getElementById("activeCell").innerHTML = "activeCell=" + activeCell;
+    }
+}
+
+function removeHighlightFromCells(cellIds, highlightClass = "highlight") {
+    cellIds.forEach(cellId => {
+        const cell = document.getElementById(cellId);
+        if (cell) {
+            cell.classList.remove(highlightClass);
+        } else {
+            console.warn(`Cell with ID "${cellId}" not found.`);
+        }
+    });
+}
+
+function removeHighlightAttackFromCells(cellIds, highlightClass = "highlightAttack") {
+    cellIds.forEach(cellId => {
+        const cell = document.getElementById(cellId);
+        if (cell) {
+            cell.classList.remove(highlightClass);
+        } else {
+            console.warn(`Cell with ID "${cellId}" not found.`);
+        }
+    });
+}
+
+function highlightCells(cellIds, highlightClass = "highlight") {
+    cellIds.forEach(cellId => {
+        const cell = document.getElementById(cellId);
+        if (cell) {
+            cell.classList.add(highlightClass);
+            if (!highlighted.includes(cellId)) {
+                highlighted.push(cellId);
             }
+        } else {
+            console.warn(`Cell with ID "${cellId}" not found.`);
         }
+    });
+}
 
-        document.querySelector('table').addEventListener('click', handleCellClick);
-
-        function removeHighlightFromCells(cellIds, highlightClass = "highlight") {
-            cellIds.forEach(cellId => {
-                const cell = document.getElementById(cellId);
-                if (cell) {
-                    cell.classList.remove(highlightClass);
-                } else {
-                    console.warn(`Cell with ID "${cellId}" not found.`);
-                }
-            });
+function highlightAttackableCells(cellIds, highlightClass = "highlightAttack") {
+    cellIds.forEach(cellId => {
+        const cell = document.getElementById(cellId);
+        if (cell) {
+            cell.classList.add(highlightClass);
+            if (!highlightedAttacks.includes(cellId)) {
+                highlightedAttacks.push(cellId);
+            }
+        } else {
+            console.warn(`Cell with ID "${cellId}" not found.`);
         }
-
-        function removeHighlightAttackFromCells(cellIds, highlightClass = "highlight") {
-
-            cellIds.forEach(cellId => {
-                const cell = document.getElementById(cellId);
-                if (cell) {
-                    cell.classList.remove(highlightClass);
-                } else {
-                    console.warn(`Cell with ID "${cellId}" not found.`);
-                }
-            });
-
-        }
-
-        function highlightCells(cellIds, highlightClass = "highlight") {
-            cellIds.forEach(cellId => {
-                const cell = document.getElementById(cellId);
-                if (cell) {
-                    cell.classList.add(highlightClass);
-                    if (!highlighted.includes(cellId)) {
-                        highlighted.push(cellId);
-                    }
-                } else {
-                    console.warn(`Cell with ID "${cellId}" not found.`);
-                }
-            });
-        }
-        function highlightAttackableCells(cellIds, highlightClass = "highlightAttack") {
-            cellIds.forEach(cellId => {
-                const cell = document.getElementById(cellId);
-                if (cell) {
-                    cell.classList.add(highlightClass);
-                    if (!highlighted.includes(cellId)) {
-                        highlighted.push(cellId);
-                    }
-                } else {
-                    console.warn(`Cell with ID "${cellId}" not found.`);
-                }
-            });
-        }
+    });
+}
 
 
-        new Piece("br1", 0, 0, "♜", "black", "rook", 8);
-        new Piece("bn1", 0, 1, "♞", "black", "knight", 1);
-        new Piece("bb1", 0, 2, "♝", "black", "bishop", 8);
-        new Piece("bq", 0, 3, "♛", "black", "queen", 8);
-        new Piece("bk", 0, 4, "♚", "black", "king", 1);
-        new Piece("bb2", 0, 5, "♝", "black", "bishop", 8);
-        new Piece("bn2", 0, 6, "♞", "black", "knight", 1);
-        new Piece("br2", 0, 7, "♜", "black", "rook", 8);
 
-        new Piece("wr1", 7, 0, "♖", "white", "rook", 8);
-        new Piece("wn1", 7, 1, "♘", "white", "knight", 1);
-        new Piece("wb1", 7, 2, "♗", "white", "bishop", 8);
-        new Piece("wq", 7, 3, "♕", "white", "queen", 8);
-        new Piece("wk", 7, 4, "♔", "white", "king", 1);
-        new Piece("wb2", 7, 5, "♗", "white", "bishop", 8);
-        new Piece("wn2", 7, 6, "♘", "white", "knight", 1);
-        new Piece("wr2", 7, 7, "♖", "white", "rook", 8);
+            new Piece("br1", 0, 0, "♜", "black", "rook", 8);
+            new Piece("bn1", 0, 1, "♞", "black", "knight", 1);
+            new Piece("bb1", 0, 2, "♝", "black", "bishop", 8);
+            new Piece("bq", 0, 3, "♛", "black", "queen", 8);
+            new Piece("bk", 0, 4, "♚", "black", "king", 1);
+            new Piece("bb2", 0, 5, "♝", "black", "bishop", 8);
+            new Piece("bn2", 0, 6, "♞", "black", "knight", 1);
+            new Piece("br2", 0, 7, "♜", "black", "rook", 8);
+
+            new Piece("wr1", 7, 0, "♖", "white", "rook", 8);
+            new Piece("wn1", 7, 1, "♘", "white", "knight", 1);
+            new Piece("wb1", 7, 2, "♗", "white", "bishop", 8);
+            new Piece("wq", 7, 3, "♕", "white", "queen", 8);
+            new Piece("wk", 7, 4, "♔", "white", "king", 1);
+            new Piece("wb2", 7, 5, "♗", "white", "bishop", 8);
+            new Piece("wn2", 7, 6, "♘", "white", "knight", 1);
+            new Piece("wr2", 7, 7, "♖", "white", "rook", 8);
 
 
-        function poke() {
-            alert("piece=" + activePiece + "\ncell=" + activeCell);
-        }
+            function poke() {
+                alert("piece=" + activePiece + "\ncell=" + activeCell);
+            }
     </script>
     <button onclick="poke()">poke</button>
 </body>
