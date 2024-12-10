@@ -66,41 +66,6 @@ function calculateMoves(row, col, moves, recurse) {
     return accumulator;
 }
 
-
-function calculateMovesForPawns(row, col, moves, recurse) {
-    function isInBounds(y, x) {
-        return y >= 0 && y < 8 && x >= 0 && x < 8
-    }
-    let accumulator = [] 
-    const r = row + moves[0];
-    const c = col + moves[1];
-    let id = `${r}-${c}`
-    const potentialPiece = document.getElementById(id).getAttribute('data-piece')
-    if (potentialPiece == undefined || potentialPiece.length < 1) {
-        accumulator.push(id);
-        checkit(y, x, r2, c2, limit - 1, accumulator);
-    } else {
-        return accumulator
-    }
-
-    if ( recurse === 2 ) {
-        r += moves[0];
-        c += moves[1];
-        id = `${r}-${c}`
-        const potentialPiece = document.getElementById(id).getAttribute('data-piece')
-        if (potentialPiece == undefined || potentialPiece.length < 1) {
-            accumulator.push(id);
-        } else {
-            return accumulator
-        }
-    }
-    return accumulator
-
-}
-
-
-
-
 function calculateAttacksForPawns(row, col, moves, recurse, color) {
     const accumulator = [];
     const direction = color === black ? 1 : -1; // Black moves down, White moves up
@@ -261,13 +226,19 @@ class Piece {
         }
     }
 
+    // getReachableCells() {
+    //     if (this.type === "pawnb" && this.type === "pawnw") {
+    //         return calculateMovesForPawns(this.row, this.col, this.moves, this.recurse);
+    //     } else {
+    //         return calculateMoves(this.row, this.col, this.moves, this.recurse);
+    //     }
+    // }
+
     getReachableCells() {
-        if (this.type !== "pawnb" && this.type !== "pawnw") {
-            return calculateMovesForPawns(this.row, this.col, this.moves, this.recurse);
-        } else {
             return calculateMoves(this.row, this.col, this.moves, this.recurse);
-        }
     }
+
+
     getAttackableCells() {
         if (this.type !== "pawnb" && this.type !== "pawnw") {
             return calculateAttacks(this.row, this.col, this.moves, this.recurse, this.color);
@@ -276,5 +247,3 @@ class Piece {
         }
     }
 }
-
-
