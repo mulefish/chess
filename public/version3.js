@@ -66,56 +66,61 @@ function calculateMoves(row, col, moves, recurse) {
     return accumulator;
 }
 
+
+function calculateMovesForPawns(row, col, moves, recurse) {
+    function isInBounds(y, x) {
+        return y >= 0 && y < 8 && x >= 0 && x < 8
+    }
+    let accumulator = [] 
+    const r = row + moves[0];
+    const c = col + moves[1];
+    let id = `${r}-${c}`
+    const potentialPiece = document.getElementById(id).getAttribute('data-piece')
+    if (potentialPiece == undefined || potentialPiece.length < 1) {
+        accumulator.push(id);
+        checkit(y, x, r2, c2, limit - 1, accumulator);
+    } else {
+        return accumulator
+    }
+
+    if ( recurse === 2 ) {
+        r += moves[0];
+        c += moves[1];
+        id = `${r}-${c}`
+        const potentialPiece = document.getElementById(id).getAttribute('data-piece')
+        if (potentialPiece == undefined || potentialPiece.length < 1) {
+            accumulator.push(id);
+        } else {
+            return accumulator
+        }
+    }
+    return accumulator
+
+}
+
+
+
+
 function calculateAttacksForPawns(row, col, moves, recurse, color) {
-    let accumulator = []
-    if (color === black) {
-        const maybe1R = row + 1
-        const maybe1C = col - 1
-        if (maybe1R >= 0 && maybe1C < 8) {
-            const id = `${maybe1R}-${maybe1C}`
-            const pId = document.getElementById(id).getAttribute('data-piece');
-            if (pId !== undefined && pId !== "") {
-                if (pieces[pId].color === white) {
-                    accumulator.push(id);
-                }
+    const accumulator = [];
+    const direction = color === black ? 1 : -1; // Black moves down, White moves up
+    const opponentColor = color === black ? white : black;
+
+    // Helper function to check and add valid attack positions
+    const addAttackIfValid = (row, col) => {
+        if (row >= 0 && row < 8 && col >= 0 && col < 8) {
+            const id = `${row}-${col}`;
+            const pieceId = document.getElementById(id).getAttribute('data-piece');
+            if (pieceId && pieces[pieceId].color === opponentColor) {
+                accumulator.push(id);
             }
         }
-        const maybe2R = row + 1
-        const maybe2C = col + 1
-        if (maybe2R >= 0 && maybe2C < 8) {
-            const id = `${maybe2R}-${maybe2C}`
-            const pId = document.getElementById(id).getAttribute('data-piece');
-            if (pId !== undefined && pId !== "") {
-                if (pieces[pId].color === white) {
-                    accumulator.push(id);
-                }
-            }
-        }
-    } else if ( color === white) {
-            const maybe1R = row - 1
-            const maybe1C = col - 1
-            if (maybe1R >= 0 && maybe1C < 8) {
-                const id = `${maybe1R}-${maybe1C}`
-                const pId = document.getElementById(id).getAttribute('data-piece');
-                if (pId !== undefined && pId !== "") {
-                    if (pieces[pId].color === black) {
-                        accumulator.push(id);
-                    }
-                }
-            }
-    
-            const maybe2R = row - 1
-            const maybe2C = col + 1
-            if (maybe2R >= 0 && maybe2C < 8) {
-                const id = `${maybe2R}-${maybe2C}`
-                const pId = document.getElementById(id).getAttribute('data-piece');
-                if (pId !== undefined && pId !== "") {
-                    if (pieces[pId].color === black) {
-                        accumulator.push(id);
-                    }
-                }
-            }
-        }
+    };
+
+    // Check diagonal left and right attacks
+    addAttackIfValid(row + direction, col - 1);
+    addAttackIfValid(row + direction, col + 1);
+
     return accumulator;
 }
 
@@ -207,6 +212,8 @@ class Piece {
         this.recurse = recurse;
         this.moveCount = -1
         this.cellId = `${row}-${col}`;
+        this.lastRow = undefined
+        this.lastCol = undefined
 
         if (!window.pieces) {
             window.pieces = {};
@@ -224,8 +231,13 @@ class Piece {
             }
         }
         const [newRow, newCol] = newLocation.split('-').map(Number);
+        this.lastRow = this.row 
+        this.lastCol = this.col
         this.row = newRow;
         this.col = newCol;
+        if ( this.moveCount > 0) {
+            recordHist(this.lastRow, this.lastCol, this.row, this.col, this.id, this.type, this.color)
+        }
         this.cellId = newLocation;
         const cell = document.getElementById(this.cellId);
         if (cell) {
@@ -236,18 +248,25 @@ class Piece {
         }
     }
 
-    removeFromPlace() {
+    removeFromPlace() { 
         const cell = document.getElementById(this.cellId);
         if (cell) {
             cell.innerHTML = ""; // Clear the cell's content
-            cell.removeAttribute('data-piece'); // Remove the data attribute
+            const something =  cell.removeAttribute('data-piece')
+            if ( something !== undefined ) {
+                cell.removeAttribute('data-piece'); // Remove the data attribute
+            }
         } else {
             console.error(`Cell with ID "${this.cellId}" not found.`);
         }
     }
 
     getReachableCells() {
-        return calculateMoves(this.row, this.col, this.moves, this.recurse);
+        if (this.type !== "pawnb" && this.type !== "pawnw") {
+            return calculateMovesForPawns(this.row, this.col, this.moves, this.recurse);
+        } else {
+            return calculateMoves(this.row, this.col, this.moves, this.recurse);
+        }
     }
     getAttackableCells() {
         if (this.type !== "pawnb" && this.type !== "pawnw") {
