@@ -175,12 +175,8 @@
                 const col = event.target.getAttribute('data-col');
                 activeCell = event.target.getAttribute('id');
 
-
-
                 if (highlightedAttacks.includes(activeCell)) {
                     const attackedPiece = event.target.getAttribute('data-piece');
-
-
                     placeAttackingPiece(row, col, activePiece, attackedPiece)
                 } else {
                     if (highlighted.includes(activeCell) && activePiece !== undefined && activePiece.length > 1) {
