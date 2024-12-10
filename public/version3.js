@@ -154,21 +154,16 @@ function calculateAttacks(row, col, moves, recurse, color) {
 
 function placingPiece(row, col) {
     // Check if the move is an en passant capture
-    blue("placingPieces")
     if (lastMove && activePiece.type === "pawnw" || activePiece.type === "pawnb") {
- yellow("a ")
         const direction = (activePiece.color === "black") ? -1 : 1;
         if (Math.abs(lastMove.from.split('-')[0] - lastMove.to.split('-')[0]) === 2) {
-            yellow("b ")
             if (lastMove.piece.row === row - direction && lastMove.piece.col === col) {
-                yellow("c ")
-
                 // Remove the captured pawn
                 pieces[lastMove.piece.id].removeFromPlace();
             }
         }
     }
-    yellow("d ")
+
     // Move the piece
     pieces[activePiece].removeFromPlace();
     const newLocation = `${row}-${col}`;
@@ -200,6 +195,7 @@ function selectingPiece() {
     }
 }
 
+
 class Piece {
     constructor(id, row, col, icon, color, type, recurse) {
         this.id = id;
@@ -222,12 +218,13 @@ class Piece {
         this.moves = getPossibleMoves(type);
     }
 
+
     placePiece(newLocation) {
         this.moveCount++;
         this.lastRow = this.row;
         this.lastCol = this.col;
         this.moveCount++
-        if ( this.moveCount > 1 ) {
+        if ( this.moveCount > 1 &&  (this.type === "pawnb" || this.type === "pawnw" ))  {
             this.recurse = 1
         }
 
@@ -235,6 +232,7 @@ class Piece {
         this.row = newRow;
         this.col = newCol;
     
+        // Update last move
         lastMove = {
             piece: this,
             from: `${this.lastRow}-${this.lastCol}`,
@@ -252,6 +250,7 @@ class Piece {
         }
     }
     
+
     removeFromPlace() { 
         const cell = document.getElementById(this.cellId);
         if (cell) {
@@ -264,6 +263,7 @@ class Piece {
             console.error(`Cell with ID "${this.cellId}" not found.`);
         }
     }
+
 
     getReachableCells() {
             return calculateMoves(this.row, this.col, this.moves, this.recurse);
