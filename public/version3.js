@@ -1,4 +1,3 @@
-
 function getPossibleMoves(type) {
     let moves = [];
     switch (type) {
@@ -23,7 +22,6 @@ function getPossibleMoves(type) {
         case 'pawnw':
             moves = [[-1, 0]]
             break;
-
     }
     return moves;
 }
@@ -37,8 +35,6 @@ function blue(msg) {
 
 function calculateMoves(row, col, moves, recurse) {
     function checkit(r1, c1, r2, c2, limit, accumulator) {
-
-
         if (limit < 1) {
             return accumulator;
         }
@@ -47,8 +43,6 @@ function calculateMoves(row, col, moves, recurse) {
         if (y >= 0 && y < 8 && x >= 0 && x < 8) {
             const id = `${y}-${x}`;
             if (!accumulator.includes(id)) {
-
-
                 const potentialPiece = document.getElementById(id).getAttribute('data-piece')
                 if (potentialPiece == undefined || potentialPiece.length < 1) {
                     // Avoid moving untop another piece. 
@@ -72,44 +66,39 @@ function calculateMoves(row, col, moves, recurse) {
     return accumulator;
 }
 
-
-
 function calculateAttacksForPawns(row, col, moves, recurse, color) {
     let accumulator = []
-    if (color === "black") {
+    if (color === black) {
         const maybe1R = row + 1
         const maybe1C = col - 1
         if (maybe1R >= 0 && maybe1C < 8) {
             const id = `${maybe1R}-${maybe1C}`
             const pId = document.getElementById(id).getAttribute('data-piece');
             if (pId !== undefined && pId !== "") {
-                if (pieces[pId].color === "white") {
+                if (pieces[pId].color === white) {
                     accumulator.push(id);
                 }
             }
         }
-
         const maybe2R = row + 1
         const maybe2C = col + 1
         if (maybe2R >= 0 && maybe2C < 8) {
             const id = `${maybe2R}-${maybe2C}`
             const pId = document.getElementById(id).getAttribute('data-piece');
             if (pId !== undefined && pId !== "") {
-                if (pieces[pId].color === "white") {
+                if (pieces[pId].color === white) {
                     accumulator.push(id);
                 }
             }
         }
-
-
-    } else if ( color === "white") {
+    } else if ( color === white) {
             const maybe1R = row - 1
             const maybe1C = col - 1
             if (maybe1R >= 0 && maybe1C < 8) {
                 const id = `${maybe1R}-${maybe1C}`
                 const pId = document.getElementById(id).getAttribute('data-piece');
                 if (pId !== undefined && pId !== "") {
-                    if (pieces[pId].color === "black") {
+                    if (pieces[pId].color === black) {
                         accumulator.push(id);
                     }
                 }
@@ -121,17 +110,12 @@ function calculateAttacksForPawns(row, col, moves, recurse, color) {
                 const id = `${maybe2R}-${maybe2C}`
                 const pId = document.getElementById(id).getAttribute('data-piece');
                 if (pId !== undefined && pId !== "") {
-                    if (pieces[pId].color === "black") {
+                    if (pieces[pId].color === black) {
                         accumulator.push(id);
                     }
                 }
             }
-    
-    
         }
-    
-
-
     return accumulator;
 }
 
@@ -154,12 +138,12 @@ function calculateAttacks(row, col, moves, recurse, color) {
                 } else {
                     // Enemy piece found; add to accumulator and stop further exploration in this direction
 
-                    if (color === "white") {
-                        if (pieces[potentialPiece].color === "black") {
+                    if (color === white) {
+                        if (pieces[potentialPiece].color === black) {
                             accumulator.push(id);
                         }
-                    } else if (color === "black") {
-                        if (pieces[potentialPiece].color === "white") {
+                    } else if (color === black) {
+                        if (pieces[potentialPiece].color === white) {
                             accumulator.push(id);
                         }
                     }
@@ -177,8 +161,6 @@ function calculateAttacks(row, col, moves, recurse, color) {
     }
     return accumulator;
 }
-
-
 
 function placingPiece(row, col) {
     // Move the piece
